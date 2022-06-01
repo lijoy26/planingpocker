@@ -9,11 +9,14 @@ const Table = (props) =>{
   const hand= props.hand;
     const socket = props.socket;
     var [valuelist,setValuelist]=useState([]);
+    const coffeeon = props.coffeeon;
     valuelist=props.valuelist
     setValuelist= props.setValuelist
     useEffect(()=>{
+      if(!coffeeon){
         socket.emit("selected",props.value)
-      },[props.value, socket]);
+      }
+      },[socket]);
 
       useEffect(()=>{
         socket.on("preach",(data)=>{
@@ -42,7 +45,9 @@ const Table = (props) =>{
                             <Result
                             hand={hand}
                             valuelist = {valuelist}
-                            goback = {props.goback}/>
+                            goback = {props.goback}
+                            coffeeon={coffeeon}
+                            />
                         ):(<p></p>)}
               </div>
               <div className="placedCards">

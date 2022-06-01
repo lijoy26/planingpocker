@@ -17,7 +17,7 @@ import UsersInRoom from "./UsersInRoom";
 import Cofee from "./Cofee";
 import $ from 'jquery';
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect(location.origin);
 var chooseTime = 0;
 
 var series = "";
@@ -32,6 +32,7 @@ const Poker = () => {
   const [users, setUsers] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [isDescription, setIsDescription] = useState(true);
 
   const [hand, setHand] = useState([]);
   const [hand2, setHand2] = useState([]);
@@ -45,9 +46,9 @@ const Poker = () => {
   const [onBlur, setOnBlur] = useState(true);
   var [noName, setNoName] = useState(false);
   var [flags, noflags] = useState(0);
+  const [coffeeon, setCoffeeOn] = useState(false);
 
- 
-  const[valuelist,setValuelist]=useState([]);
+  const [valuelist, setValuelist] = useState([]);
 
   useEffect(() => {
     var { name, room, cardVale } = queryString.parse(location.search);
@@ -75,10 +76,11 @@ const Poker = () => {
       // }
     });
   }, [socket, location.search]);
-  useEffect(() => {}, [socket]);
+  useEffect(() => { }, [socket]);
   //Chat
 
   useEffect(() => {
+    if(!coffeeon){
     socket.on("message", (message) => {
       setMessages((messages) => [...messages, message]);
     });
@@ -86,15 +88,17 @@ const Poker = () => {
     socket.on("roomData", ({ users }) => {
       setUsers(users);
     });
-    
-    socket.on("receive", (data) => {});
 
-   
+    socket.on("receive", (data) => { });
+
+  }
   }, []);
 
   //cards
   useEffect(() => {
+    if(!coffeeon){
     addCards();
+    }
   }, []);
 
   useEffect(() => {
@@ -109,18 +113,20 @@ const Poker = () => {
         setValuelist([])
       }
     });
-    
+
     socket.on("selected", (data) => {
       setSelected(data);
     });
-   
+
   }, [socket]);
 
   //goback reset
 
   const goback = () => {
     console.log("Reset");
+    if(!coffeeon){
     socket.emit("preach", "reset");
+    }
   };
   const addCards = () => {
     let count = cardVales.length;
@@ -132,7 +138,7 @@ const Poker = () => {
       setHand((prevValues) => [...prevValues, cardVales[count - 1]]);
       setHand2((prevValues) => [...prevValues, cardVales[count - 1]]);
     }, 100);
-    
+
   };
   const removeCard = (value) => {
     setHand((prevValues) => prevValues.filter((e) => e !== value));
@@ -144,10 +150,11 @@ const Poker = () => {
 
   const sendMessage = (event) => {
     event.preventDefault();
-
+    if(!coffeeon){
     if (message) {
       socket.emit("sendMessage", message, () => setMessage(""));
     }
+  }
   };
   //Name Functions
   function handleFlag(e) {
@@ -158,81 +165,84 @@ const Poker = () => {
       some: "state",
     });
   }
-const cafe = ()=>{
-  var { name, room, cardVale } = queryString.parse(location.search);
+  const cafe = () => {
+    var { name, room, cardVale } = queryString.parse(location.search);
 
-  console.log(flags)
- if(flags===0){
-   
-  socket.disconnect()
+    console.log(flags)
+    if (flags === 0) {
 
-   console.log("disconnect")
+      socket.disconnect()
+      setCoffeeOn(true)
+      console.log("disconnect")
 
-   noflags(1)
- }
- else{
-  
-  socket.emit("join", { name, room, cardVale }, (error) => {
-    // if (error) {
-    //   alert(error);
-    //   // setBackerror('1');
-    // }
-  });
-  socket.open();
-  history.push(`/poker?name=${name}&room=${room}&cardVale=${series}`, {
-    some: "state",
-  });
-  console.log("connect")
-  noflags(0)
- }
-}
+      noflags(1)
+    }
+    else {
+      setCoffeeOn(false)
+      socket.emit("join", { name, room, cardVale }, (error) => {
+        // if (error) {
+        //   alert(error);
+        //   // setBackerror('1');
+        // }
+      });
+      socket.open();
+      history.push(`/poker?name=${name}&room=${room}&cardVale=${series}`, {
+        some: "state",
+      });
+      console.log("connect")
+      noflags(0)
+    }
+  }
   const Log = (props) => {
     return (
       <div className={on ? "off" : null} id="name">
         <div className="overlay-name">
-        <div  className="noname-form">
-          <input
-            type="text"
-            name="sda"
-            id="asd"
-            placeholder="Enter your name"
-            onChange={(e) => {
-              value = e.target.value;
-            }}
-            required
-          />
-          <button
-            type="button"
-            className="name-button"
-            onClick={(e) => {
-              handleFlag(value);
-            }}
-          >
-            Submit
-          </button>
-        </div>
+          <div className="noname-form">
+            <input
+              type="text"
+              name="sda"
+              id="asd"
+              placeholder="Enter your name"
+              onChange={(e) => {
+                value = e.target.value;
+              }}
+              required
+            />
+            <button
+              type="button"
+              className="name-button"
+              onClick={(e) => {
+                handleFlag(value);
+              }}
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </div>
     );
   };
   const RemoveLog = (props) => {
-    return( 
-    <div>
+    return (
+      <div>
 
-    </div>
+      </div>
     );
   };
 
   function Status(props) {
     const noName = props.noName;
-    
+
     if (noName) {
       return (
-      <Log />
+        <Log />
       );
     }
-    return( <RemoveLog />);
+    return (<RemoveLog />);
   }
+ 
+ 
+
 const showUsers = () =>{
   
   socket.emit('getusers', { name, room }, (error) => {
@@ -245,6 +255,7 @@ const showUsers = () =>{
 const [linkChange, setLinkChange] = useState('');
 const [showLinks, setShowLinks] = useState(true);
 const [showJira, setShowJira] = useState(true);
+const [isJira, setIsJira] = useState(true);
 const sendJira = (event) =>{
   event.preventDefault();
   
@@ -252,11 +263,20 @@ const sendJira = (event) =>{
       socket.emit("jira",linkChange)
   }
 }
-useEffect(()=>{
-  socket.on("jira",(data)=>{
+  useEffect(() => {
+    if(!coffeeon){
+    socket.on("jira", (data) => {
       setLinkChange(data);
-  })
+  })}
 },[socket])
+useEffect(()=>{
+  console.log(linkChange);
+  if(linkChange.length){
+    setIsJira(false);
+  }else{
+    setIsJira(true);
+  }
+},[linkChange])
 
   return (
     <div
@@ -268,67 +288,71 @@ useEffect(()=>{
         <Status noName={noName} />
       </div>
       <header className="NavBar">
-              <nav className="navbar navbar-expand-lg navbar-light">
-              <Logo className="hbLogo" room={room} name={name} />
+        <nav className="navbar navbar-expand-lg navbar-light">
+          <Logo className="hbLogo" room={room} name={name} />
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav  d-flex Title">
               <li className="nav-item">
-                <div className="User">      
+                <div className="User">
                   <div className="UserName">
-                      {name}
-                  </div>  
+                    {name}
+                  </div>
                 </div>
               </li>
               <li className="nav-item">
-                <UsersInRoom users={users}  onClick={() => showUsers()}/>
+                <UsersInRoom users={users} onClick={() => showUsers()} />
               </li>
               <li className="nav-item">
-              <ShareLink room={room} cardVal={cardVale} />
+                <ShareLink room={room} cardVal={cardVale} />
               </li>
-             
-              
 
-                 </ul>
+
+
+            </ul>
           </div>
-          
+
         </nav>
-       
+
       </header>
       <main className="main-content">
-          <div className="Jira-outer-link">
-          <div className={showLinks ? "Jira-link": "dispnone"}>
-            <p className={showJira ?"Jira-text":"dispnone" }>Jira Link </p>
-            <a className="Jira-text" href={""+linkChange} target="_blank" rel="noopener noreferrer">
-     
+        <div className="Jira-outer-link">
+          <div className={showLinks ? "Jira-link" : "dispnone"}>
+            <p className={showJira ? "Jira-text" : "dispnone"}>Jira Link </p>
+            <a className="Jira-text" href={"" + linkChange} target="_blank" rel="noopener noreferrer">
+
               <p className="LinkChange">{linkChange}</p>
-              </a>
-            <label htmlFor="Jira-pencil"  className="sr-only" >Jira Link Edit</label>
-            <button aria-label="Jira Link Edit" id="Jira-pencil" className="btn rounded" onClick={()=>setShowLinks(false)}>  <i className="fa fa-pencil" ></i></button>
+            </a>
+            <label htmlFor="Jira-pencil" className="sr-only" >Jira Link Edit</label>
+            <button aria-label="Jira Link Edit" id="Jira-pencil" className="btn rounded" onClick={() => setShowLinks(false)}>  <i className="fa fa-pencil" ></i></button>
           </div>
-            <div className={showLinks ?"dispnone" : "Jira-link"}>
-              <input type="text" className="Jira-Text" value={linkChange} onChange={({ target: { value } })=>setLinkChange(value)}/>
-              <button className="btn Jira-button" onClick={(event)=>{setShowLinks(true);setShowJira(false); sendJira(event)}}>Enter</button>
-            </div>
+          <div className={showLinks ? "dispnone" : "Jira-link"}>
+            <input type="text" className="Jira-Text" value={linkChange} onChange={({ target: { value } }) => setLinkChange(value)} />
+            <button className="btn Jira-button" onClick={(event) => { setShowLinks(true); setShowJira(false); sendJira(event) }}>Enter</button>
+          </div>
         </div>
       <div className="storyDes ">
-        <StoryDescription socket={socket} />
+      
+        <StoryDescription socket={socket} setIsDescription={setIsDescription} />
       </div>
       <div className={flags===1 ? "disconnect" : "connect"}>
         <Cofee onClick={() =>cafe()}/>
       </div>
 
-          {flag !== 1 ? (
+        {flag !== 1 ? (
           <div className="Cards">
-            <div className="cardK" role="group"     aria-labelledby="cardgroup">
+            <div className="cardK" role="group" aria-labelledby="cardgroup">
               <label id="cardgroup" className="sr-only">Pointer stories</label>
             {hand.map((value, index) => (
               <Card
                 key={value}
                 index={index}
                 value={value}
+               
+                isDescription={isDescription}
+                isJira={isJira}
                 onClick={() => {removeCard(value);showUsers()}}
               />
             ))
@@ -337,7 +361,7 @@ useEffect(()=>{
       </div>
           )
           :
-           (
+          (
             <Table
               hand={hand2}
               value={placed}
@@ -347,23 +371,25 @@ useEffect(()=>{
               users={users}
               valuelist={valuelist}
               setValuelist={setValuelist}
+              coffeeon={coffeeon}
             />
-          )}       
-       
-      <div className="Hamburgericon" >
-      <Hamburger
-                  chatT={chatT}
-                  setMessage={setMessage}
-                  room={room}
-                  name={name}
-                  sendMessage={sendMessage}
-                  message={message}
-                  messages={messages}
-                />
-      </div>  
-    </main>
+          )}
+
+        <div className="Hamburgericon" >
+          <Hamburger
+            chatT={chatT}
+            setMessage={setMessage}
+            room={room}
+            name={name}
+            sendMessage={sendMessage}
+            message={message}
+            messages={messages}
+          />
+        </div>
+      </main>
     </div>
   );
 };
-
+  
 export default Poker;
+  

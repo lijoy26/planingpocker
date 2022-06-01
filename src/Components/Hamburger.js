@@ -42,9 +42,9 @@ const Menu = ({ open, setMessage, room, name, sendMessage, message, messages, se
       <InfoBar room={room} />
       <div className="insideicon">
     <label htmlFor="Closeicon"  className="sr-only" >Close Messages</label>
-    <StyledBurger aria-label="Close Message" id="Closeicon" className="buttonburgermessage" open={open} onClick={() => setOpen(!open)}>
-        <span  className="fa fa-close" style={{fontSize:'20px',zIndex:300, color:"#C10E21"}}></span>
-    </StyledBurger>
+    <div role="button" aria-label="Close Message" id="Closeicon" className="buttonburgermessage" open={open} onClick={() => setOpen(!open)}>
+     <span  className="fa fa-close" style={{fontSize:'20px',zIndex:300, color:"#C10E21", marginTop: '20px', cursor: 'pointer'}}></span>
+</div>
     </div>
      <Chat  setMessage={setMessage} room={room} name={name} sendMessage={sendMessage} message={message} messages={messages} />
      

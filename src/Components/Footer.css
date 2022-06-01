@@ -6,8 +6,7 @@
     position: fixed; 
     bottom: 0;
     width: 100%;
-     /* margin-left: -600px;  */
-    /* margin-bottom:-80px ; */
+     
     height: 100px !important;
     z-index: -900;
   }
@@ -18,10 +17,10 @@
     (-webkit-min-device-pixel-ratio: 2), 
     (min-resolution: 192dpi) { 
     .mountain {
-      /* background-image: url('../assets/Mountain/Asset 2@4x@2x.png'); */
+     
       background-size: 2000px 200px;
       background-repeat: repeat-x;
-      /* background-position:bottom -50px left -50px ; */
+
       position: fixed;
       bottom: 0;
       width: 120%;

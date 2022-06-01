@@ -1,13 +1,17 @@
+.popc {
+  display: flex;
+  flex-direction: row;   
+}
 .pop {
   display: flex;
   resize: none;
-  border-color: #ccc;
+  margin-right: 10px;
+  border-color: grey;
   border-radius: 4px;
-  font-size: 0.5rem;
+  font-size: 1.5rem;
   width: 15rem;
-  color: rgb(0, 0, 0);
+  color: black;
   height: auto;
-  
 }
 .pop:focus{
   outline: none !important;
@@ -29,20 +33,36 @@
   font-weight: bold ;
 }
 
+.copyText {
+  margin-top: 10px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+}
+
 
 [role=tooltip].popup-content {
   display: block;
-    /* width: 10%; */
-    box-shadow: 0 0 3px rgb(0 0 0 / 16%);
+    box-shadow: 3px 3px 3px rgb(0 0 0 / 90%);
     border-radius: 5px;
+    padding-left: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: -50px;
     height: max-content;
     width: fit-content;
     cursor:pointer;
     
 }
 
-.copyText{
-  display: flex;
-  justify-content: center;
+#tag {
+  font-size: 25px;
+  margin-top: -5px;
 }
 
+.popup-content {
+  margin: auto;
+  background: rgb(255, 255, 255);
+  width: 50%;
+  padding: 5px;
+}

@@ -6,29 +6,35 @@
     background-repeat: repeat-x;
     background-size: cover;
     overflow: visible !important;
-    height: 230px;
+    height: 250px;
     display: flex;
     margin-top:110px ;
 
 }
+
 .atag:focus{
     outline: none!important;
     box-shadow: none !important;
 }
+
 #react-select-3-placeholder{
     background-color: white;
 }
-#react-select-3-input:focus{
+
+ #react-select-3-input:focus{
    outline: none !important;
     box-shadow: none !important;
 }
-div.selectCreate:focus{
-    outline: 2px solid #E17509 !important;
-  box-shadow: 0 0 4px 4px #E17509 !important;
-}
+
+
+ 
 div.selectCreate{
     outline: none !important;
     box-shadow: none!important;
+}  
+div.selectCreate:focus{
+    outline: 2px solid #E17509 !important;
+  box-shadow: 0 0 4px 4px #E17509 !important;
 }
 
 .content{
@@ -51,10 +57,7 @@ div.selectCreate{
 } 
 
 
-/* #Pointing-Poker-Dice{
-    position:absolute;
-    right: 10px;  
-    bottom: -20px; */
+
 
   input[type=text], select {
     width: 300px;
@@ -105,7 +108,11 @@ div.selectCreate{
       margin-bottom: 26.64px !important;
       margin-top: 10px;
       border: none;
+      
+ 
+
   }
+ 
   
   .mainContent{
       display: flex;
@@ -151,11 +158,38 @@ div.selectCreate{
     margin-bottom: 18px !important;
     margin-top : 16px !important;
     padding:10px;
+    margin-left: 23px;
+    width: 400px;
+  
+
 }
+
 .Input2{
     margin-bottom: 20px !important;
     padding:10px;
+    margin-left: 23px;
+    width: 400px;
 }
+
+@media only screen and (max-width: 600px) {
+    .Input1{
+        margin-bottom: 18px !important;
+        margin-top : 16px !important;
+        padding:10px;
+        margin-left: 23px;
+        width: 100%;
+      
+    
+    }
+    .Input2{
+        margin-bottom: 20px !important;
+        padding:10px;
+        margin-left: 23px;
+        width: 100%;
+    
+    }
+    
+  }
 
 /* Cards Vertical */
 .outerLogin{
@@ -188,6 +222,7 @@ div.selectCreate{
     margin: auto;
     text-decoration: none;
 }
+
 .atag:hover{
     text-decoration: none;
 }
@@ -196,10 +231,38 @@ div.selectCreate{
  align-self: center;
  justify-content: center;
  align-items: center;
- /* padding: auto; */
- height: 40px !important;
+ 
+ height: 40px;
  display: flex;
  padding: 0 !important;
  margin: 0;
  margin-bottom: 10px;
+}
+
+.errstyle{
+ 
+
+ color: red;
+ margin-top: -15px;
+  font-size: 13px;
+ padding-left: 20px;
+}
+
+.formerror{
+    color: red;
+margin-top: -15px;
+ font-size: 13px;
+padding-left: 20px;
+ 
+}
+
+#formerror{
+    margin-top: -5px;
+    color: red;
+     font-size: 13px;
+    padding-left: 20px;
+    
+}
+.buttonburgermessage{
+    padding-left: 30px;
 }

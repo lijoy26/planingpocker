@@ -15,10 +15,6 @@ const Chat = (props) => {
  
 
 
-// function closMsg(){
-//   setTimeout(() =>{document.getElementById('myMsg').style.width= "0%"}, 1000)
-// }
-
 
   return (
     <>
