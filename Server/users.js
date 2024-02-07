@@ -42,8 +42,9 @@ const reset = (room) =>{
             e.worth = "waiting"}
         });
 }
+
 const getUser = (id) => users.find((user) => user.id === id);
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset, checkName,};
+module.exports = { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset, checkName};

@@ -11,7 +11,8 @@ app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
-const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset } = require('./users.js');
+const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset} = require('./users.js');
+
 //Listening Port
 const server = app.listen(80, () => {
     console.log("server started at port 80 ");
@@ -23,6 +24,27 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     },
 });
+
+// Function to store timers and clear them when needed
+const activeTimers = {};
+
+// Function to be executed when the timer completes
+const timerCallback = (room, id) => {
+  console.log('Timer completed!');
+  const user = getUser(id);
+  if (user) {
+    io.in(user.room).emit("enable", "false");
+    roomUser = getUsersInRoom(user.room);
+    roomUser.forEach((e)=>{
+        if(e.worth === "waiting"){
+            addWorth(e.id, "?");
+            io.in(user.room).emit("selected", "?");
+            io.in(user.room).emit("preach", roomUser);
+        }
+        });
+    }
+  delete activeTimers[room];
+};
 
 // Connection to server
 
@@ -45,6 +67,46 @@ io.on("connection", function (socket) {
         if (user) {
             io.in(user.room).emit("story", data);
 
+        }
+    })
+
+    // Polling
+    socket.on("poll", function (data) {
+        const user = getUser(socket.id);
+        if (user) {
+          const room = user.room;
+      
+          if (data === 'true') {
+            console.log("Starting Poll");
+            io.in(room).emit("poll", data);
+      
+            // Check if there is an active timer for the room and clear it
+            if (activeTimers[room]) {
+              clearTimeout(activeTimers[room]);
+              console.log('Existing timer cleared.');
+            }
+      
+            // Set a new 90-second timer
+            activeTimers[room] = setTimeout(() => timerCallback(room, socket.id), 60 * 1000);
+          } else if (data === 'false') {
+            console.log("Ending Poll");
+      
+            // Check if there is an active timer for the room and clear it
+            if (activeTimers[room]) {
+              clearTimeout(activeTimers[room]);
+              console.log('Existing timer cleared.');
+            }
+      
+            io.in(room).emit("poll", data);
+          }
+        }
+    });
+
+    //Enable Polling
+    socket.on("enable", function (data) {
+        const user = getUser(socket.id);
+        if (user) {
+            io.in(user.room).emit("enable", data);
         }
     })
 

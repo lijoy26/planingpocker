@@ -16,6 +16,7 @@ import Hamburger from "./Hamburger";
 import UsersInRoom from "./UsersInRoom";
 import Cofee from "./Cofee";
 import $ from 'jquery';
+import Timer from "./Timer";
 
 const socket = io.connect(location.origin);
 var chooseTime = 0;
@@ -51,10 +52,12 @@ const Poker = () => {
 
   const [valuelist, setValuelist] = useState([]);
 
+  const [isPolling, setIsPolling] = useState("false");
+  const [enablePolling, setEnablePolling] = useState("false");
+
   useEffect(() => {
     var { name, room, cardVale, roomOwner } = queryString.parse(location.search);
     roomOwner = roomOwner ? roomOwner : false;
-    // console.log("The room Owner Param is",roomOwner)
     setRoom(room);
     setName(name);
     setRoomOwner(roomOwner)
@@ -62,14 +65,13 @@ const Poker = () => {
       setNoName(true);
     }
     series = cardVale;
-    console.log(series);
     cardVale = series.split(",");
     cardVales = series.split(",");
     cardVale.forEach((element) => {
       console.log(element.toString());
       setCardVal([...cardVale, element]);
     });
-    console.log(cardVales);
+    // console.log(cardVales);
     // setCardVal(...cardVal,cardVal);
 
     socket.emit("join", { name, room, roomOwner, cardVale }, (error) => {
@@ -80,7 +82,7 @@ const Poker = () => {
     });
     if (roomOwner) {
       socket.on("admin", () => {
-        console.log("The admin user");
+        // console.log("The admin user");
       });
     }
   }, [socket, location.search]);
@@ -112,7 +114,6 @@ const Poker = () => {
   useEffect(() => {
     socket.on("playerdet", (data) => {
       setNumberofuser(data);
-      console.log(numberofuser);
     });
     socket.on("preach", (data) => {
       if (data === "reset") {
@@ -134,6 +135,12 @@ const Poker = () => {
     console.log("Reset");
     if(!coffeeon){
     socket.emit("preach", "reset");
+    if(isPolling == 'true'){
+      socket.emit("poll", "false")
+    }
+    if(enablePolling == 'true'){
+      socket.emit("enable", "false")
+    }
     }
   };
   const addCards = () => {
@@ -168,7 +175,6 @@ const Poker = () => {
   function handleFlag(e) {
     setName(value);
     setOn(!on);
-    console.log(value);
     history.push(`/poker?name=${value}&room=${room}&roomOwner=${roomOwner}&cardVale=${series}`, {
       some: "state",
     });
@@ -248,9 +254,29 @@ const Poker = () => {
     }
     return (<RemoveLog />);
   }
- 
- 
+const startPoll = (event) =>{
+    event.preventDefault();
+    if(!coffeeon){ 
+      if(isPolling == 'false'){
+        socket.emit("poll", "true")
+        if(enablePolling ==='false'){
+          socket.emit("enable","true")
+        }
+      }
+  }
+} 
+useEffect(()=>{    
+  socket.on("poll",(data)=>{
+      setIsPolling(data)
+  })
+},[socket])
 
+useEffect(()=>{    
+  socket.on("enable",(data)=>{
+      setEnablePolling(data)
+  })
+},[socket])
+ 
 const showUsers = () =>{
   
   socket.emit('getusers', { name, room }, (error) => {
@@ -340,11 +366,16 @@ useEffect(()=>{
         </div>
       <div className="storyDes ">
       
-        <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner}/>
+        <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll}/>
       </div>
       <div className={flags===1 ? "disconnect" : "connect"}>
-        <Cofee onClick={() =>cafe()}/>
+        <Cofee onClick={() =>{if(isPolling=='false'){cafe()}}}/>
       </div>
+      <div className="poll-button-container">
+      {roomOwner == 'true' && isPolling == 'false' ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>): (<></>)}
+      </div>
+      <Timer isPolling ={isPolling} coffeeon = {coffeeon}/>
+          <div>
           {flag !== 1 ? (
             <div className="Cards">
               <div className="cardK" role="group" aria-labelledby="cardgroup">
@@ -355,7 +386,7 @@ useEffect(()=>{
                   index={index}
                   value={value}
                  
-                  isDescription={isDescription}
+                  enablePolling={enablePolling}
                   isJira={isJira}
                   onClick={() => {removeCard(value);showUsers()}}
                 />
@@ -379,7 +410,7 @@ useEffect(()=>{
                 roomOwner = {roomOwner}
               />
             )}
-
+          </div>
         <div className="Hamburgericon" >
           <Hamburger
             chatT={chatT}

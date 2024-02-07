@@ -211,6 +211,27 @@ header{
     padding-bottom: 20px  !important;
 }
 
+.poll-button-container{
+    margin-left: auto; 
+    margin-right: auto;
+}
+.pollButtons{
+    border-radius: 8px;
+  padding-inline: 20px;
+  padding-top: 9px;
+  padding-bottom: 5px;
+  margin-left: 5px;
+  display: flex;
+  font: normal normal bold 16px Montserrat;
+  letter-spacing: 0px;
+  opacity: 1;
+ 
+  border: 1px solid #c10e21;
+  background-color: #c10e21;
+  font-size: 16px;
+  color: white;
+}
+
 .disconnect button{
     background-color: #C10E21;
     position: fixed;
