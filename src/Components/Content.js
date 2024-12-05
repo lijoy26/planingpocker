@@ -164,10 +164,10 @@ const  Content= () => {
                      <form className="d-flex flex-column p-2" name="myForm" action="form.html" method="post" onSubmit={e => {userSubmit(e)}} >
                         <p aria-label="Create a room" id = "loginHead"> CREATE/JOIN </p>
                         
-                      <input className="Input1 form-control" type="text"  aria-label="Enter User ID"   placeholder="User Name" name="uname" required  onChange={(event) =>setName(event.target.value)}/>
+                      <input className="Input1 form-control" type="text"  aria-label="Enter User ID"   placeholder="User Name" name="uname" required  autoComplete='off' onChange={(event) =>setName(event.target.value)}/>
                       <p className='formerror'>{formErrors.name}</p>
 
-                        <input className="Input2 form-control"type="text" aria-label="Enter Room ID" placeholder="Room ID" name="roomid" required onChange={(event) =>setRoom(event.target.value)}/>
+                        <input className="Input2 form-control"type="text" aria-label="Enter Room ID" placeholder="Room ID" name="roomid" required autoComplete='off' onChange={(event) =>setRoom(event.target.value)}/>
                         <p className='formerror'>{formErrors.room}</p>
 
                        

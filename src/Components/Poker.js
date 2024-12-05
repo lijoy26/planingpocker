@@ -135,10 +135,10 @@ const Poker = () => {
     console.log("Reset");
     if(!coffeeon){
     socket.emit("preach", "reset");
-    if(isPolling == 'true'){
+    if(isPolling === 'true'){
       socket.emit("poll", "false")
     }
-    if(enablePolling == 'true'){
+    if(enablePolling === 'true'){
       socket.emit("enable", "false")
     }
     }
@@ -257,7 +257,7 @@ const Poker = () => {
 const startPoll = (event) =>{
     event.preventDefault();
     if(!coffeeon){ 
-      if(isPolling == 'false'){
+      if(isPolling === 'false'){
         socket.emit("poll", "true")
         if(enablePolling ==='false'){
           socket.emit("enable","true")
@@ -357,7 +357,7 @@ useEffect(()=>{
               <p className="LinkChange">{linkChange}</p>
             </a>
             <label htmlFor="Jira-pencil" className="sr-only" >Jira Link Edit</label>
-            {roomOwner=='true' && <button aria-label="Jira Link Edit" id="Jira-pencil" className="btn rounded" onClick={() => setShowLinks(false)}>  <i className="fa fa-pencil" ></i></button>}
+            {roomOwner==='true' && <button aria-label="Jira Link Edit" id="Jira-pencil" className="btn rounded" onClick={() => setShowLinks(false)}>  <i className="fa fa-pencil" ></i></button>}
           </div>
           <div className={showLinks ? "dispnone" : "Jira-link"}>
             <input type="text" className="Jira-Text" value={linkChange} onChange={({ target: { value } }) => setLinkChange(value)} />
@@ -369,10 +369,10 @@ useEffect(()=>{
         <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll}/>
       </div>
       <div className={flags===1 ? "disconnect" : "connect"}>
-        <Cofee onClick={() =>{if(isPolling=='false'){cafe()}}}/>
+        <Cofee onClick={() =>{if(isPolling==='false'){cafe()}}}/>
       </div>
       <div className="poll-button-container">
-      {roomOwner == 'true' && isPolling == 'false' ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>): (<></>)}
+      {roomOwner === 'true' && isPolling === 'false' ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>): (<></>)}
       </div>
       <Timer isPolling ={isPolling} coffeeon = {coffeeon}/>
           <div>
