@@ -4,6 +4,7 @@ const cors = require('cors');
 const { Server } = require('socket.io');
 const app = express();
 
+const rooms = new Set();
 var roomUser = [];
 app.use(express.static(path.join(__dirname, '../build')));
 app.use(cors());
@@ -11,7 +12,8 @@ app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
-const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset} = require('./users.js');
+const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset } = require('./users.js');
+const { getuid } = require('process');
 
 //Listening Port
 const server = app.listen(80, () => {
@@ -30,34 +32,50 @@ const activeTimers = {};
 
 // Function to be executed when the timer completes
 const timerCallback = (room, id) => {
-  console.log('Timer completed!');
-  const user = getUser(id);
-  if (user) {
-    io.in(user.room).emit("enable", "false");
-    roomUser = getUsersInRoom(user.room);
-    roomUser.forEach((e)=>{
-        if(e.worth === "waiting"){
-            addWorth(e.id, "?");
-            io.in(user.room).emit("selected", "?");
-            io.in(user.room).emit("preach", roomUser);
-        }
+    console.log('Timer completed!');
+    const user = getUser(id);
+    if (user) {
+        io.in(user.room).emit("enable", "false");
+        roomUser = getUsersInRoom(user.room);
+        roomUser.forEach((e) => {
+            if (e.worth === "waiting") {
+                addWorth(e.id, "?");
+                io.in(user.room).emit("selected", "?");
+                io.in(user.room).emit("preach", roomUser);
+            }
         });
     }
-  delete activeTimers[room];
+    delete activeTimers[room];
 };
 
 // Connection to server
 
 io.on("connection", function (socket) {
     //Join into the room
+    console.log(rooms);
+    console.log(`New client connected: ${socket.id}`);
 
-    socket.on('join', ({ name, room,roomOwner, cardVale}, callback) => {
-        console.log(cardVale);
+    socket.on('validateRoom',(roomID,callback)=>{
+        if (rooms.has(roomID)) {
+            callback(false);
+        } else {
+            callback(true);
+        }
+    })
+
+    socket.on('join', ({ name, room, roomOwner, cardVale }, callback) => {
+        console.log("card value : ", cardVale);
         const { error, user } = addUser({ id: socket.id, name, room, roomOwner, cardVale });
         if (error) return callback(error);
         console.log(socket.id);
         console.log(user);
+        rooms.add(room);
         socket.join(room);
+
+        io.to(user.room).emit("roomData", {
+            room: user.room,
+            users: getUsersInRoom(user.room),
+        });
     });
 
     //Story Description
@@ -74,31 +92,31 @@ io.on("connection", function (socket) {
     socket.on("poll", function (data) {
         const user = getUser(socket.id);
         if (user) {
-          const room = user.room;
-      
-          if (data === 'true') {
-            console.log("Starting Poll");
-            io.in(room).emit("poll", data);
-      
-            // Check if there is an active timer for the room and clear it
-            if (activeTimers[room]) {
-              clearTimeout(activeTimers[room]);
-              console.log('Existing timer cleared.');
+            const room = user.room;
+
+            if (data === 'true') {
+                console.log("Starting Poll");
+                io.in(room).emit("poll", data);
+
+                // Check if there is an active timer for the room and clear it
+                if (activeTimers[room]) {
+                    clearTimeout(activeTimers[room]);
+                    console.log('Existing timer cleared.');
+                }
+
+                // Set a new 90-second timer
+                activeTimers[room] = setTimeout(() => timerCallback(room, socket.id), 60 * 1000);
+            } else if (data === 'false') {
+                console.log("Ending Poll");
+
+                // Check if there is an active timer for the room and clear it
+                if (activeTimers[room]) {
+                    clearTimeout(activeTimers[room]);
+                    console.log('Existing timer cleared.');
+                }
+
+                io.in(room).emit("poll", data);
             }
-      
-            // Set a new 90-second timer
-            activeTimers[room] = setTimeout(() => timerCallback(room, socket.id), 60 * 1000);
-          } else if (data === 'false') {
-            console.log("Ending Poll");
-      
-            // Check if there is an active timer for the room and clear it
-            if (activeTimers[room]) {
-              clearTimeout(activeTimers[room]);
-              console.log('Existing timer cleared.');
-            }
-      
-            io.in(room).emit("poll", data);
-          }
         }
     });
 
@@ -132,7 +150,24 @@ io.on("connection", function (socket) {
 
 
     socket.on('disconnect', () => {
+        const user = getUser(socket.id)
         removeUser(socket.id);
+
+        // Emit updated room data when a user leaves
+        if (user) {
+
+            const UsersInRoom = getUsersInRoom(user.room);
+
+            io.to(user.room).emit("roomData", {
+                room: user.room,
+                users: UsersInRoom,
+            });
+
+            if (UsersInRoom.length === 0){
+                console.log(`Room ${user.room} is now empty and will be removed`);
+                rooms.delete(user.room);
+            }
+        }
         console.log("user disconnected", socket.id);
         console.log(roomUser);
         io.sockets.emit("playerdet", roomUser.length);
@@ -165,11 +200,11 @@ io.on("connection", function (socket) {
         callback();
     });
 
-    socket.on('disconnect', () => {
+    // socket.on('disconnect', () => {
 
-        removeUser(socket.id);
-        console.log("user disconnected", socket.id);
-        console.log(roomUser);
-        io.sockets.emit("playerdet", roomUser.length);
-    });
+    //     removeUser(socket.id);
+    //     console.log("user disconnected", socket.id);
+    //     console.log(roomUser);
+    //     io.sockets.emit("playerdet", roomUser.length);
+    // });
 });

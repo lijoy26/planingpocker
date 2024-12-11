@@ -15,10 +15,13 @@ import Table from "./Table";
 import Hamburger from "./Hamburger";
 import UsersInRoom from "./UsersInRoom";
 import Cofee from "./Cofee";
-import $ from 'jquery';
+import $, { error } from 'jquery';
 import Timer from "./Timer";
+import { getSocket } from "./Socket";
+// import socket from "./Socket";
 
-const socket = io.connect(location.origin);
+// const socket = io.connect(location.origin);
+const socket = getSocket();
 var chooseTime = 0;
 
 var series = "";
@@ -75,8 +78,9 @@ const Poker = () => {
     // setCardVal(...cardVal,cardVal);
 
     socket.emit("join", { name, room, roomOwner, cardVale }, (error) => {
-      // if (error) {
-      //   alert(error);
+      if (error) {
+        console.error("Join error:", error);
+      }
       //   // setBackerror('1');
       // }
     });
@@ -276,6 +280,7 @@ useEffect(()=>{
       setEnablePolling(data)
   })
 },[socket])
+
  
 const showUsers = () =>{
   
@@ -286,6 +291,10 @@ const showUsers = () =>{
   });
 
 }
+
+
+
+
 const [linkChange, setLinkChange] = useState('');
 const [showLinks, setShowLinks] = useState(true);
 const [showJira, setShowJira] = useState(true);
@@ -330,17 +339,19 @@ useEffect(()=>{
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav  d-flex Title">
               <li className="nav-item">
-                <div className="User">
-                  <div className="UserName">
+                {/* <div className="User">
+                  <div className="UserName">  */}
                     {name}
-                  </div>
-                </div>
-              </li>
-              <li className="nav-item">
-                <UsersInRoom users={users} onClick={() => showUsers()} />
+                  {/* </div>
+                </div> */}
               </li>
               <li className="nav-item">
                 <ShareLink room={room} cardVal={cardVale} />
+              </li>
+              <li className="nav-item">
+                <UsersInRoom users={users} 
+                // onClick={() => showUsers()} 
+                />
               </li>
             </ul>
           </div>
@@ -368,6 +379,7 @@ useEffect(()=>{
       
         <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll}/>
       </div>
+
       <div className={flags===1 ? "disconnect" : "connect"}>
         <Cofee onClick={() =>{if(isPolling==='false'){cafe()}}}/>
       </div>
@@ -388,7 +400,10 @@ useEffect(()=>{
                  
                   enablePolling={enablePolling}
                   isJira={isJira}
-                  onClick={() => {removeCard(value);showUsers()}}
+                  onClick={() => {removeCard(value);
+                    showUsers()
+                  }
+                  }
                 />
               ))
               }
