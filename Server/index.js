@@ -88,6 +88,14 @@ io.on("connection", function (socket) {
         }
     })
 
+    socket.on("clearStory", function () {
+        const user = getUser(socket.id);
+        if (user) {
+            io.in(user.room).emit("clearStory");
+
+        }
+    })
+
     // Polling
     socket.on("poll", function (data) {
         const user = getUser(socket.id);

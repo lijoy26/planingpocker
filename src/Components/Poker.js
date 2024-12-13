@@ -377,7 +377,7 @@ useEffect(()=>{
         </div>
       <div className="storyDes ">
       
-        <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll}/>
+        <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll} goback={goback}/>
       </div>
 
       <div className={flags===1 ? "disconnect" : "connect"}>
