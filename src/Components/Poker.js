@@ -29,6 +29,7 @@ var cardVales = "";
 var value = "";
 
 const Poker = () => {
+  let interval;
   const history = useHistory();
   var [name, setName] = useState("");
   let [roomOwner, setRoomOwner] = useState(false)
@@ -147,13 +148,22 @@ const Poker = () => {
     }
     }
   };
+
   const addCards = () => {
+    if(interval) {
+      clearInterval(interval);
+    }
     let count = cardVales.length;
+
     setHand([cardVales[count - 1]]);
     setHand2([cardVales[count - 1]]);
-    const interval = setInterval(() => {
+    interval = setInterval(() => {
       --count;
-      if (count === 0) return clearInterval(interval);
+      if (count === 0) { 
+        clearInterval(interval);
+        interval = null;
+        return;
+      }
       setHand((prevValues) => [...prevValues, cardVales[count - 1]]);
       setHand2((prevValues) => [...prevValues, cardVales[count - 1]]);
     }, 100);

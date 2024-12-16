@@ -81,7 +81,7 @@ const StoryDescription = (props) => {
           rows="5"
           placeholder="Brief Your Story"
           value={stor}
-          disabled={roomOwner === 'false' && isInputDisabled}
+          disabled={roomOwner === 'false' || isInputDisabled}
           onChange={({ target: { value } }) => {
             if (!coffeeon) {
               setStor(value);
