@@ -127,7 +127,7 @@ const StoryDescription = (props) => {
                 handleNext();
               }}
             >
-              Next
+              Next Story
             </button>
           )}
         </div>
