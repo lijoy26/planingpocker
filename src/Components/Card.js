@@ -6,7 +6,7 @@ const Card = ({ value, onClick, index, enablePolling, isJira}) => {
   // console.log(isDescription, isJira);
   return (
       
-      <button id={value} disabled={(enablePolling=== 'false')} className="cardBox" onClick={onClick}>
+      <button id={value} disabled={(!enablePolling)} className="cardBox" onClick={onClick}>
         
        <label className="visuallyhidden" >Pointing Poker Point {value==="?" ? unknown : value }</label>
       <span  className="values">{value}</span>

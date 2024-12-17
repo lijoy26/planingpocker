@@ -16,8 +16,8 @@ const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset } = requir
 const { getuid } = require('process');
 
 //Listening Port
-const server = app.listen(80, () => {
-    console.log("server started at port 80 ");
+const server = app.listen(3000, () => {
+    console.log("server started at port 3000 ");
 })
 
 const io = new Server(server, {
@@ -32,7 +32,7 @@ const activeTimers = {};
 
 // Function to be executed when the timer completes
 const timerCallback = (room, id) => {
-    console.log('Timer completed!');
+    
     const user = getUser(id);
     if (user) {
         io.in(user.room).emit("enable", "false");
@@ -52,8 +52,6 @@ const timerCallback = (room, id) => {
 
 io.on("connection", function (socket) {
     //Join into the room
-    console.log(rooms);
-    console.log(`New client connected: ${socket.id}`);
 
     socket.on('validateRoom',(roomID,callback)=>{
         if (rooms.has(roomID)) {
@@ -64,11 +62,10 @@ io.on("connection", function (socket) {
     })
 
     socket.on('join', ({ name, room, roomOwner, cardVale }, callback) => {
-        console.log("card value : ", cardVale);
+        roomOwner = roomOwner === 'true';
         const { error, user } = addUser({ id: socket.id, name, room, roomOwner, cardVale });
         if (error) return callback(error);
-        console.log(socket.id);
-        console.log(user);
+        
         rooms.add(room);
         socket.join(room);
 
@@ -103,24 +100,24 @@ io.on("connection", function (socket) {
             const room = user.room;
 
             if (data === 'true') {
-                console.log("Starting Poll");
+             
                 io.in(room).emit("poll", data);
 
                 // Check if there is an active timer for the room and clear it
                 if (activeTimers[room]) {
                     clearTimeout(activeTimers[room]);
-                    console.log('Existing timer cleared.');
+                   
                 }
 
                 // Set a new 90-second timer
                 activeTimers[room] = setTimeout(() => timerCallback(room, socket.id), 60 * 1000);
             } else if (data === 'false') {
-                console.log("Ending Poll");
+                
 
                 // Check if there is an active timer for the room and clear it
                 if (activeTimers[room]) {
                     clearTimeout(activeTimers[room]);
-                    console.log('Existing timer cleared.');
+                  
                 }
 
                 io.in(room).emit("poll", data);
@@ -172,12 +169,11 @@ io.on("connection", function (socket) {
             });
 
             if (UsersInRoom.length === 0){
-                console.log(`Room ${user.room} is now empty and will be removed`);
+                
                 rooms.delete(user.room);
             }
         }
-        console.log("user disconnected", socket.id);
-        console.log(roomUser);
+        
         io.sockets.emit("playerdet", roomUser.length);
     });
 
@@ -196,7 +192,7 @@ io.on("connection", function (socket) {
             const user = getUser(socket.id);
             reset(user.room)
             roomUser = getUsersInRoom(user.room);
-            console.log(roomUser);
+           
             io.in(user.room).emit("preach", 'reset');
             io.in(user.room).emit("preach", roomUser);
         }
@@ -208,11 +204,4 @@ io.on("connection", function (socket) {
         callback();
     });
 
-    // socket.on('disconnect', () => {
-
-    //     removeUser(socket.id);
-    //     console.log("user disconnected", socket.id);
-    //     console.log(roomUser);
-    //     io.sockets.emit("playerdet", roomUser.length);
-    // });
 });

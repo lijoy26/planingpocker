@@ -28,12 +28,11 @@ const checkName =({ name }) =>{
 
 const removeUser = (id) => {
     users= users.filter((e)=> e.id!==id);
-    console.log(users)
 }
 const addWorth = (id,value) =>{
     const index = users.findIndex((user) => user.id === id);
     users[index].worth = value;
-    console.log(users);
+   
 }
 const reset = (room) =>{
     users.forEach((e)=>{
