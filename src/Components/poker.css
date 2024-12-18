@@ -294,6 +294,22 @@ input[type=text].Jira-Text{
     padding: 0 !important;
 }
 
+/* Active link styling */
+.active-link {
+    color: #C10E21; /* Red color for active links */
+    pointer-events: auto; /* Makes the link clickable */
+    text-decoration: underline;
+  }
+  
+  /* Disabled link styling */
+  .disabled-link {
+    color: gray; /* Gray color for disabled links */
+    pointer-events: none; /* Disables clicks */
+    text-decoration: none; /* Removes underline for consistency */
+    cursor: default; /* Changes the cursor to default */
+  }
+  
+
 
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
     .blurred-container {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import './Story.css';
 
 const StoryDescription = (props) => {
+  const clearJiraLink = props.clearJiraLink
   const socket = props.socket;
   const coffeeon = props.coffeeon;
   let roomOwner = props.roomOwner;
@@ -39,6 +40,7 @@ const StoryDescription = (props) => {
     
     goback();
     socket.emit("clearStory");
+    socket.emit("clearJiraLink");
   };
 
   useEffect(() => {
@@ -55,6 +57,10 @@ const StoryDescription = (props) => {
       setLastSentStor("");
       setButtonLabel("Send");
       setIsInputDisabled(false);
+    });
+
+    socket.on("clearJiraLink",()=>{
+      clearJiraLink();
     })
 
       return () => {

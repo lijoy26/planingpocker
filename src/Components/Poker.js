@@ -62,6 +62,7 @@ const Poker = () => {
   useEffect(() => {
     var { name, room, cardVale, roomOwner } = queryString.parse(location.search);
     // roomOwner = roomOwner ? roomOwner : false;
+    
     roomOwner = roomOwner === 'true'
     setRoom(room);
     setName(name);
@@ -319,13 +320,19 @@ const Poker = () => {
   const [showLinks, setShowLinks] = useState(true);
   const [showJira, setShowJira] = useState(true);
   const [isJira, setIsJira] = useState(true);
+
   const sendJira = (event) => {
     event.preventDefault();
 
-    if (linkChange) {
-      socket.emit("jira", linkChange)
-    }
+    // if (linkChange) {
+    socket.emit("jira", linkChange)
+    // }
   }
+
+  const clearJiraLink = () => {
+    setLinkChange(""); // Clear the Jira link
+  };
+
   useEffect(() => {
     if (!coffeeon) {
       socket.on("jira", (data) => {
@@ -425,7 +432,7 @@ const Poker = () => {
           {roomOwner && !isPolling ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>) : (<></>)}
         </div>
         <Timer isPolling={isPolling} coffeeon={coffeeon} />
-        <div className="Jira-outer-link">
+        {/* <div className="Jira-outer-link">
           <div className={showLinks ? "Jira-link" : "dispnone"}>
             <p className={showJira ? "Jira-text" : "dispnone"}>Jira Link </p>
             <a className="Jira-text" href={"" + linkChange} target="_blank" rel="noopener noreferrer">
@@ -439,10 +446,54 @@ const Poker = () => {
             <input type="text" className="Jira-Text" value={linkChange} onChange={({ target: { value } }) => setLinkChange(value)} />
             <button className="btn Jira-button" onClick={(event) => { setShowLinks(true); setShowJira(false); sendJira(event) }}>Enter</button>
           </div>
+        </div> */}
+        <div className="Jira-outer-link">
+          {showLinks ? (
+            <div className="Jira-link">
+              <a
+                className={`Jira-text ${linkChange ? "active-link" : "disabled-link"}`}
+                href={linkChange.startsWith("http") ? linkChange : `https://${linkChange}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={linkChange ? 0 : -1} // Makes it non-focusable when disabled
+              >
+                Jira Link
+              </a>
+              {roomOwner && (
+                <button
+                  aria-label="Jira Link Edit"
+                  className="btn rounded"
+                  onClick={() => setShowLinks(false)}
+                >
+                  <i className="fa fa-pencil"></i>
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="Jira-link">
+              <input
+                type="text"
+                className="Jira-Text"
+                value={linkChange}
+                onChange={({ target: { value } }) => setLinkChange(value)}
+                placeholder="Enter Jira Link"
+              />
+              <button
+                className="btn Jira-button"
+                onClick={(event) => {
+                  setShowLinks(true);
+                  sendJira(event); // Call the handler for saving the updated link
+                }}
+              >
+                Save
+              </button>
+            </div>
+          )}
         </div>
+
         <div className="storyDes ">
 
-          <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll} goback={goback} />
+          <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll} goback={goback} clearJiraLink={clearJiraLink} />
         </div>
 
         <div className={flags === 1 ? "disconnect" : "connect"}>

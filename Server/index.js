@@ -62,7 +62,6 @@ io.on("connection", function (socket) {
     })
 
     socket.on('join', ({ name, room, roomOwner, cardVale }, callback) => {
-        roomOwner = roomOwner === 'true';
         const { error, user } = addUser({ id: socket.id, name, room, roomOwner, cardVale });
         if (error) return callback(error);
         
@@ -90,6 +89,13 @@ io.on("connection", function (socket) {
         if (user) {
             io.in(user.room).emit("clearStory");
 
+        }
+    })
+
+    socket.on("clearJiraLink", function() {
+        const user = getUser(socket.id);
+        if (user) {
+            io.in(user.room).emit("clearJiraLink");
         }
     })
 
