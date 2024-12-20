@@ -5,7 +5,7 @@ let socket;
 
 export const getSocket = () => {
     if (!socket) {
-        socket = io(location.origin); 
+        socket = io.connect(location.origin); 
     }
     return socket;
 };
