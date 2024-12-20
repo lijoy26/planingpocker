@@ -1,5 +1,9 @@
 import './Table.css'
 const Placedcard = ({ value, user}) => {
+
+  if (!user) {
+    return null;
+  }
   
     return (
         <div className="d-flex card-total">

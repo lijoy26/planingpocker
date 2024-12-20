@@ -46,11 +46,11 @@ const Timer = ({ isPolling, coffeeon }) => {
   };
 
   useEffect(() => {
-    if (isPolling === 'true' && !coffeeon) {
+    if (isPolling && !coffeeon) {
       // Start the timer when isPolling becomes true
       clearTimer(getDeadTime());
       setIsTimerRunning(true);
-    } else if(isPolling === 'false' && !coffeeon) {
+    } else if(!isPolling && !coffeeon) {
       // Stop the timer when isPolling becomes false
       if (timerRef.current) clearInterval(timerRef.current);
       setIsTimerRunning(false);

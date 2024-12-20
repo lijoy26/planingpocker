@@ -1,68 +1,35 @@
 
-// import onlineIcon from '../../icons/onlineIcon.png';
-
-// import './UsersInRoom.css'
-// const UsersInRoom = ({ users}) => {
-//     console.log(users);
-//     return ( 
-//     <div className="dropdown heightd">
-//         { <button className="btn dropdown-toggle userbutton" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" onClick={onClick}>
-//             Users In Room
-//         </button> 
-//         }
-
-//         <div className="dropdown-menu"
-//          aria-labelledby="dropdownMenuButton"
-//         >
-
-//                 {
-                
-//                 users
-//                     ? 
-//                     (
-//                         <div className="HeightD">
-                       
-                           
-//                             {users.map(({name,id}) => (
-//                                 <div key={id} className="dropdown-item namesx ">
-//                                     {name}
-//                                </div>
-//                                 ))}
-                               
-//                         </div>
-                        
-//                     )
-//                     : null
-//                 }
-            
-//         </div>        
-//     </div>
-//     );
-
-// };
-
- 
-// export default UsersInRoom;
-
-
+import { useState } from 'react';
 import './UsersInRoom.css';
 
 const UsersInRoom = ({ users }) => {
   console.log(users);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };
 
   return (
-    <div className="users-container">
-      <h3 className="user-title">Users in Room</h3>
-      <div className="users-list">
-        {users && users.length > 0 ? (
-          users.map(({ name, id }) => (
-            <div key={id} className="user-item namesx">
-              {name}
-            </div>
-          ))
-        ) : null}
+    <>
+      <button className='toggle-button' onClick={toggleSidebar}>
+        {isSidebarVisible ? "X" : "U"}
+      </button>
+
+      <div className={`users-container ${isSidebarVisible ? "visible" : "hidden"}`}>
+        <h3 className="user-title">Users in Room</h3>
+        <div className="users-list">
+          {users && users.length > 0 ? (
+            users.map(({ name, id, roomOwner }) => (
+              <div key={id} className="user-item">
+                {name}
+                {roomOwner && <span className="room-owner"> (Owner)</span>}
+              </div>
+            ))
+          ) : null}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

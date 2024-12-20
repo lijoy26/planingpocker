@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import './Story.css';
 
 const StoryDescription = (props) => {
+  const clearJiraLink = props.clearJiraLink
   const socket = props.socket;
   const coffeeon = props.coffeeon;
   let roomOwner = props.roomOwner;
@@ -36,12 +37,10 @@ const StoryDescription = (props) => {
   }
 
   const handleNext = () => {
-    // setStor("");
-    // setLastSentStor("");
-    // setButtonLabel("Send");
-    // setIsInputDisabled(false);
+    
     goback();
     socket.emit("clearStory");
+    socket.emit("clearJiraLink");
   };
 
   useEffect(() => {
@@ -58,6 +57,10 @@ const StoryDescription = (props) => {
       setLastSentStor("");
       setButtonLabel("Send");
       setIsInputDisabled(false);
+    });
+
+    socket.on("clearJiraLink",()=>{
+      clearJiraLink();
     })
 
       return () => {
@@ -66,14 +69,7 @@ const StoryDescription = (props) => {
       }
   }, [socket])
 
-  // useEffect(()=>{
-  //   if(stor.length){
-  //     props.setIsDescription(false);
-  //   }else{
-  //     props.setIsDescription(true);
-
-  //   }
-  // },[stor])
+ 
   return (
     <div className="story" >
       <form className="form-story">
@@ -81,21 +77,20 @@ const StoryDescription = (props) => {
           rows="5"
           placeholder="Brief Your Story"
           value={stor}
-          disabled={roomOwner === 'false' || isInputDisabled}
+          disabled={!roomOwner || isInputDisabled}
           onChange={({ target: { value } }) => {
             if (!coffeeon) {
               setStor(value);
-              // console.log(stor);
+              
               if (buttonLabel === "Edit") {
                 setButtonLabel("Update");
               }
             }
           }}
-        // onKeyPress={(event) => event.key === 'Enter' ? (event)=> { if(!coffeeon){sendStory(event)}} : null}
         />
 
         <div className="story-btn">
-          {roomOwner === 'true' && buttonLabel === 'Send' && (
+          {roomOwner  && buttonLabel === 'Send' && (
             <button className="btn sendButtons"
               onClick={(e) => {
                 e.preventDefault();
@@ -105,7 +100,7 @@ const StoryDescription = (props) => {
               }}
             >{buttonLabel}</button>)}
 
-          {roomOwner === "true" && buttonLabel !== "Send" && (
+          {roomOwner  && buttonLabel !== "Send" && (
             <button
               className="btn sendButtons"
               onClick={(e) => {
@@ -119,7 +114,7 @@ const StoryDescription = (props) => {
               {buttonLabel}
             </button>
           )}
-          {roomOwner === "true" && (
+          {roomOwner && (
             <button
               className="btn sendButtons"
               onClick={(e) => {

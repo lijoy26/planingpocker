@@ -35,8 +35,16 @@
   border-radius: 10px;
   padding: 10px;
   width: 500px;
-  height: 160px;
-  
+  height: 60px;
+  font-size: 22px;
+  font-weight: bolder;
+  color: #c10e21;
+}
+
+.textArea::placeholder {
+  color: #eba0a0;
+  font-size: 22px;
+  font-weight: 100;
 }
 
 .story-btn{

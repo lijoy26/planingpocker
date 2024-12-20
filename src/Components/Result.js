@@ -28,7 +28,7 @@ const Result = (props) => {
       <div className="result">
         <label  className="outcome">The result is {result}</label>
           {/* <p id="resultTot" className="outcome">The result is : {result}</p> */}
-          { roomOwner === 'true' ? (<button className="send" onClick={props.goback}>Go Back</button>): (<></>)}
+          { roomOwner ? (<button className="send" onClick={props.goback}>Go Back</button>): (<></>)}
       </div>
     );
   };

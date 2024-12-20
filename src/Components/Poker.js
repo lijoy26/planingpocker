@@ -56,12 +56,14 @@ const Poker = () => {
 
   const [valuelist, setValuelist] = useState([]);
 
-  const [isPolling, setIsPolling] = useState("false");
-  const [enablePolling, setEnablePolling] = useState("false");
+  const [isPolling, setIsPolling] = useState(false);
+  const [enablePolling, setEnablePolling] = useState(false);
 
   useEffect(() => {
     var { name, room, cardVale, roomOwner } = queryString.parse(location.search);
-    roomOwner = roomOwner ? roomOwner : false;
+    // roomOwner = roomOwner ? roomOwner : false;
+
+    roomOwner = roomOwner === 'true'
     setRoom(room);
     setName(name);
     setRoomOwner(roomOwner)
@@ -95,24 +97,24 @@ const Poker = () => {
   //Chat
 
   useEffect(() => {
-    if(!coffeeon){
-    socket.on("message", (message) => {
-      setMessages((messages) => [...messages, message]);
-    });
+    if (!coffeeon) {
+      socket.on("message", (message) => {
+        setMessages((messages) => [...messages, message]);
+      });
 
-    socket.on("roomData", ({ users }) => {
-      setUsers(users);
-    });
+      socket.on("roomData", ({ users }) => {
+        setUsers(users);
+      });
 
-    socket.on("receive", (data) => { });
+      socket.on("receive", (data) => { });
 
-  }
+    }
   }, []);
 
   //cards
   useEffect(() => {
-    if(!coffeeon){
-    addCards();
+    if (!coffeeon) {
+      addCards();
     }
   }, []);
 
@@ -138,19 +140,19 @@ const Poker = () => {
 
   const goback = () => {
     console.log("Reset");
-    if(!coffeeon){
-    socket.emit("preach", "reset");
-    if(isPolling === 'true'){
-      socket.emit("poll", "false")
-    }
-    if(enablePolling === 'true'){
-      socket.emit("enable", "false")
-    }
+    if (!coffeeon) {
+      socket.emit("preach", "reset");
+      if (isPolling) {
+        socket.emit("poll", "false")
+      }
+      if (enablePolling) {
+        socket.emit("enable", "false")
+      }
     }
   };
 
   const addCards = () => {
-    if(interval) {
+    if (interval) {
       clearInterval(interval);
     }
     let count = cardVales.length;
@@ -159,7 +161,7 @@ const Poker = () => {
     setHand2([cardVales[count - 1]]);
     interval = setInterval(() => {
       --count;
-      if (count === 0) { 
+      if (count === 0) {
         clearInterval(interval);
         interval = null;
         return;
@@ -179,11 +181,11 @@ const Poker = () => {
 
   const sendMessage = (event) => {
     event.preventDefault();
-    if(!coffeeon){
-    if (message) {
-      socket.emit("sendMessage", message, () => setMessage(""));
+    if (!coffeeon) {
+      if (message) {
+        socket.emit("sendMessage", message, () => setMessage(""));
+      }
     }
-  }
   };
   //Name Functions
   function handleFlag(e) {
@@ -207,7 +209,7 @@ const Poker = () => {
     }
     else {
       setCoffeeOn(false)
-      socket.emit("join", { name, room,roomOwner, cardVale }, (error) => {
+      socket.emit("join", { name, room, roomOwner, cardVale }, (error) => {
         // if (error) {
         //   alert(error);
         //   // setBackerror('1');
@@ -268,68 +270,82 @@ const Poker = () => {
     }
     return (<RemoveLog />);
   }
-const startPoll = (event) =>{
+  const startPoll = (event) => {
     event.preventDefault();
-    if(!coffeeon){ 
-      if(isPolling === 'false'){
+    if (!coffeeon) {
+      if (!isPolling) {
         socket.emit("poll", "true")
-        if(enablePolling ==='false'){
-          socket.emit("enable","true")
+        if (!enablePolling
+
+        ) {
+          socket.emit("enable", "true")
         }
       }
+    }
   }
-} 
-useEffect(()=>{    
-  socket.on("poll",(data)=>{
-      setIsPolling(data)
-  })
-},[socket])
-
-useEffect(()=>{    
-  socket.on("enable",(data)=>{
-      setEnablePolling(data)
-  })
-},[socket])
-
- 
-const showUsers = () =>{
-  
-  socket.emit('getusers', { name, room }, (error) => {
-    // if(error) {
-    //   alert(error);
-    // }
-  });
-
-}
-
-
-
-
-const [linkChange, setLinkChange] = useState('');
-const [showLinks, setShowLinks] = useState(true);
-const [showJira, setShowJira] = useState(true);
-const [isJira, setIsJira] = useState(true);
-const sendJira = (event) =>{
-  event.preventDefault();
-  
-  if(linkChange){
-      socket.emit("jira",linkChange)
-  }
-}
   useEffect(() => {
-    if(!coffeeon){
-    socket.on("jira", (data) => {
-      setLinkChange(data);
-  })}
-},[socket])
-useEffect(()=>{
-  console.log(linkChange);
-  if(linkChange.length){
-    setIsJira(false);
-  }else{
-    setIsJira(true);
+    socket.on("poll", (data) => {
+      if (data === 'true') {
+        setIsPolling(true)
+      }
+      else
+        setIsPolling(false)
+    })
+  }, [socket])
+
+  useEffect(() => {
+    socket.on("enable", (data) => {
+      if (data === 'true')
+        setEnablePolling(true)
+      else
+        setEnablePolling(false)
+    })
+  }, [socket])
+
+
+  const showUsers = () => {
+
+    socket.emit('getusers', { name, room }, (error) => {
+      // if(error) {
+      //   alert(error);
+      // }
+    });
+
   }
-},[linkChange])
+
+
+
+
+  const [linkChange, setLinkChange] = useState('');
+  const [showLinks, setShowLinks] = useState(true);
+  const [showJira, setShowJira] = useState(true);
+  const [isJira, setIsJira] = useState(true);
+
+  const sendJira = (event) => {
+    event.preventDefault();
+
+    socket.emit("jira", linkChange)
+  }
+
+  const clearJiraLink = () => {
+    setLinkChange(""); 
+  };
+
+  useEffect(() => {
+    if (!coffeeon) {
+      socket.on("jira", (data) => {
+        setLinkChange(data);
+      })
+    }
+  }, [socket])
+  useEffect(() => {
+    console.log(linkChange);
+    if (linkChange.length) {
+      setIsJira(false);
+    } else {
+      setIsJira(true);
+    }
+  }, [linkChange])
 
   return (
     <div
@@ -351,106 +367,143 @@ useEffect(()=>{
               <li className="nav-item">
                 {/* <div className="User">
                   <div className="UserName">  */}
-                    {name}
-                  {/* </div>
+                {name}
+                {/* </div>
                 </div> */}
               </li>
               <li className="nav-item">
                 <ShareLink room={room} cardVal={cardVale} />
               </li>
-              <li className="nav-item">
-                <UsersInRoom users={users} 
-                // onClick={() => showUsers()} 
+              {/* <li className="nav-item">
+                
                 />
-              </li>
+              </li> */}
             </ul>
           </div>
 
         </nav>
 
       </header>
-      <main className="main-content">
-        <div className="Jira-outer-link">
-          <div className={showLinks ? "Jira-link" : "dispnone"}>
-            <p className={showJira ? "Jira-text" : "dispnone"}>Jira Link </p>
-            <a className="Jira-text" href={"" + linkChange} target="_blank" rel="noopener noreferrer">
-
-              <p className="LinkChange">{linkChange}</p>
-            </a>
-            <label htmlFor="Jira-pencil" className="sr-only" >Jira Link Edit</label>
-            {roomOwner==='true' && <button aria-label="Jira Link Edit" id="Jira-pencil" className="btn rounded" onClick={() => setShowLinks(false)}>  <i className="fa fa-pencil" ></i></button>}
-          </div>
-          <div className={showLinks ? "dispnone" : "Jira-link"}>
-            <input type="text" className="Jira-Text" value={linkChange} onChange={({ target: { value } }) => setLinkChange(value)} />
-            <button className="btn Jira-button" onClick={(event) => { setShowLinks(true); setShowJira(false); sendJira(event) }}>Enter</button>
-          </div>
+      <div className="m-content">
+        <div>
+          <UsersInRoom users={users} />
         </div>
-      <div className="storyDes ">
-      
-        <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll} goback={goback}/>
-      </div>
-
-      <div className={flags===1 ? "disconnect" : "connect"}>
-        <Cofee onClick={() =>{if(isPolling==='false'){cafe()}}}/>
-      </div>
-      <div className="poll-button-container">
-      {roomOwner === 'true' && isPolling === 'false' ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>): (<></>)}
-      </div>
-      <Timer isPolling ={isPolling} coffeeon = {coffeeon}/>
+        <main className="main-content"> 
           <div>
-          {flag !== 1 ? (
-            <div className="Cards">
-              <div className="cardK" role="group" aria-labelledby="cardgroup">
-                <label id="cardgroup" className="sr-only">Pointer stories</label>
-              {hand.map((value, index) => (
-                <Card
-                  key={value}
-                  index={index}
-                  value={value}
-                 
-                  enablePolling={enablePolling}
-                  isJira={isJira}
-                  onClick={() => {removeCard(value);
-                    showUsers()
+            {flag !== 1 ? (
+              <div className="Cards">
+                <div className="cardK" role="group" aria-labelledby="cardgroup">
+                  <label id="cardgroup" className="sr-only">Pointer stories</label>
+                  {hand.map((value, index) => (
+                    <Card
+                      key={value}
+                      index={index}
+                      value={value}
+
+                      enablePolling={enablePolling}
+                      isJira={isJira}
+                      onClick={() => {
+                        removeCard(value);
+                        showUsers()
+                      }
+                      }
+                    />
+                  ))
                   }
-                  }
-                />
-              ))
-              }
-            </div>  
-        </div>
+                </div>
+              </div>
             )
-            :
-            (
-              <Table
-                hand={hand2}
-                value={placed}
-                socket={socket}
-                usersnum={numberofuser}
-                goback={goback}
-                users={users}
-                valuelist={valuelist}
-                setValuelist={setValuelist}
-                coffeeon={coffeeon}
-                roomOwner = {roomOwner}
-              />
+              :
+              (
+                <Table
+                  hand={hand2}
+                  value={placed}
+                  socket={socket}
+                  usersnum={numberofuser}
+                  goback={goback}
+                  users={users}
+                  valuelist={valuelist}
+                  setValuelist={setValuelist}
+                  coffeeon={coffeeon}
+                  roomOwner={roomOwner}
+                />
+              )}
+          </div>
+          <div className="poll-button-container">
+            {roomOwner && !isPolling ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>) : (<></>)}
+          </div>
+          <Timer isPolling={isPolling} coffeeon={coffeeon} />
+          <div className="Jira-outer-link">
+            {showLinks ? (
+              <div className="Jira-link">
+                <a
+                  className={`Jira-text ${linkChange ? "active-link" : "disabled-link"}`}
+                  href={linkChange.startsWith("http") ? linkChange : `https://${linkChange}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  tabIndex={linkChange ? 0 : -1} 
+                >
+                  Jira Link
+                </a>
+                {roomOwner && (
+                  <button
+                    aria-label="Jira Link Edit"
+                    className="btn rounded"
+                    onClick={() => setShowLinks(false)}
+                  >
+                    <i className="fa fa-pencil"></i>
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="Jira-link">
+                <input
+                  type="text"
+                  className="Jira-Text"
+                  value={linkChange}
+                  onChange={({ target: { value } }) => setLinkChange(value)}
+                  placeholder="Enter Jira Link"
+                />
+                <button
+                  className="btn Jira-button"
+                  onClick={(event) => {
+                    setShowLinks(true);
+                    sendJira(event);
+                  }}
+                >
+                  Save
+                </button>
+              </div>
             )}
           </div>
-        <div className="Hamburgericon" >
-          <Hamburger
-            chatT={chatT}
-            setMessage={setMessage}
-            room={room}
-            name={name}
-            sendMessage={sendMessage}
-            message={message}
-            messages={messages}
-          />
-        </div>
-      </main>
+
+          <div className="storyDes ">
+
+            <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll} goback={goback} clearJiraLink={clearJiraLink} />
+          </div>
+
+          <div className={flags === 1 ? "disconnect" : "connect"}>
+            <Cofee onClick={() => {
+              if (!isPolling
+              ) { cafe() }
+            }} />
+          </div>
+
+          <div className="Hamburgericon" >
+            <Hamburger
+              chatT={chatT}
+              setMessage={setMessage}
+              room={room}
+              name={name}
+              sendMessage={sendMessage}
+              message={message}
+              messages={messages}
+            />
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
-  
+
 export default Poker;
-  

@@ -295,6 +295,24 @@ input[type=text].Jira-Text{
 }
 
 
+.active-link {
+    color: #C10E21; 
+    pointer-events: auto; 
+    text-decoration: underline;
+  }
+  
+.disabled-link {
+    color: gray; 
+    pointer-events: none; 
+    text-decoration: none; 
+    cursor: default; 
+  }
+
+.m-content{
+    display: flex;
+}
+
+
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
     .blurred-container {
       -webkit-backdrop-filter: blur(10px);
