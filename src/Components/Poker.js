@@ -324,13 +324,11 @@ const Poker = () => {
   const sendJira = (event) => {
     event.preventDefault();
 
-    // if (linkChange) {
     socket.emit("jira", linkChange)
-    // }
   }
 
   const clearJiraLink = () => {
-    setLinkChange(""); // Clear the Jira link
+    setLinkChange(""); 
   };
 
   useEffect(() => {
@@ -443,7 +441,7 @@ const Poker = () => {
                   href={linkChange.startsWith("http") ? linkChange : `https://${linkChange}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  tabIndex={linkChange ? 0 : -1} // Makes it non-focusable when disabled
+                  tabIndex={linkChange ? 0 : -1} 
                 >
                   Jira Link
                 </a>
@@ -470,7 +468,7 @@ const Poker = () => {
                   className="btn Jira-button"
                   onClick={(event) => {
                     setShowLinks(true);
-                    sendJira(event); // Call the handler for saving the updated link
+                    sendJira(event);
                   }}
                 >
                   Save

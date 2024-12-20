@@ -5,7 +5,7 @@ let socket;
 
 export const getSocket = () => {
     if (!socket) {
-        socket = io('http://localhost:80'); 
+        socket = io(location.origin); 
     }
     return socket;
 };
