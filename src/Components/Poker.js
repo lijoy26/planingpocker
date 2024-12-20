@@ -62,7 +62,7 @@ const Poker = () => {
   useEffect(() => {
     var { name, room, cardVale, roomOwner } = queryString.parse(location.search);
     // roomOwner = roomOwner ? roomOwner : false;
-    
+
     roomOwner = roomOwner === 'true'
     setRoom(room);
     setName(name);
@@ -376,145 +376,134 @@ const Poker = () => {
               <li className="nav-item">
                 <ShareLink room={room} cardVal={cardVale} />
               </li>
-              <li className="nav-item">
-                <UsersInRoom users={users}
-                // onClick={() => showUsers()} 
+              {/* <li className="nav-item">
+                
                 />
-              </li>
+              </li> */}
             </ul>
           </div>
 
         </nav>
 
       </header>
-      <main className="main-content">
+      <div className="m-content">
         <div>
-          {flag !== 1 ? (
-            <div className="Cards">
-              <div className="cardK" role="group" aria-labelledby="cardgroup">
-                <label id="cardgroup" className="sr-only">Pointer stories</label>
-                {hand.map((value, index) => (
-                  <Card
-                    key={value}
-                    index={index}
-                    value={value}
+          <UsersInRoom users={users} />
+        </div>
+        <main className="main-content"> 
+          <div>
+            {flag !== 1 ? (
+              <div className="Cards">
+                <div className="cardK" role="group" aria-labelledby="cardgroup">
+                  <label id="cardgroup" className="sr-only">Pointer stories</label>
+                  {hand.map((value, index) => (
+                    <Card
+                      key={value}
+                      index={index}
+                      value={value}
 
-                    enablePolling={enablePolling}
-                    isJira={isJira}
-                    onClick={() => {
-                      removeCard(value);
-                      showUsers()
-                    }
-                    }
-                  />
-                ))
-                }
+                      enablePolling={enablePolling}
+                      isJira={isJira}
+                      onClick={() => {
+                        removeCard(value);
+                        showUsers()
+                      }
+                      }
+                    />
+                  ))
+                  }
+                </div>
               </div>
-            </div>
-          )
-            :
-            (
-              <Table
-                hand={hand2}
-                value={placed}
-                socket={socket}
-                usersnum={numberofuser}
-                goback={goback}
-                users={users}
-                valuelist={valuelist}
-                setValuelist={setValuelist}
-                coffeeon={coffeeon}
-                roomOwner={roomOwner}
-              />
-            )}
-        </div>
-        <div className="poll-button-container">
-          {roomOwner && !isPolling ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>) : (<></>)}
-        </div>
-        <Timer isPolling={isPolling} coffeeon={coffeeon} />
-        {/* <div className="Jira-outer-link">
-          <div className={showLinks ? "Jira-link" : "dispnone"}>
-            <p className={showJira ? "Jira-text" : "dispnone"}>Jira Link </p>
-            <a className="Jira-text" href={"" + linkChange} target="_blank" rel="noopener noreferrer">
-
-              <p className="LinkChange">{linkChange}</p>
-            </a>
-            <label htmlFor="Jira-pencil" className="sr-only" >Jira Link Edit</label>
-            {roomOwner && <button aria-label="Jira Link Edit" id="Jira-pencil" className="btn rounded" onClick={() => setShowLinks(false)}>  <i className="fa fa-pencil" ></i></button>}
-          </div>
-          <div className={showLinks ? "dispnone" : "Jira-link"}>
-            <input type="text" className="Jira-Text" value={linkChange} onChange={({ target: { value } }) => setLinkChange(value)} />
-            <button className="btn Jira-button" onClick={(event) => { setShowLinks(true); setShowJira(false); sendJira(event) }}>Enter</button>
-          </div>
-        </div> */}
-        <div className="Jira-outer-link">
-          {showLinks ? (
-            <div className="Jira-link">
-              <a
-                className={`Jira-text ${linkChange ? "active-link" : "disabled-link"}`}
-                href={linkChange.startsWith("http") ? linkChange : `https://${linkChange}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                tabIndex={linkChange ? 0 : -1} // Makes it non-focusable when disabled
-              >
-                Jira Link
-              </a>
-              {roomOwner && (
-                <button
-                  aria-label="Jira Link Edit"
-                  className="btn rounded"
-                  onClick={() => setShowLinks(false)}
-                >
-                  <i className="fa fa-pencil"></i>
-                </button>
+            )
+              :
+              (
+                <Table
+                  hand={hand2}
+                  value={placed}
+                  socket={socket}
+                  usersnum={numberofuser}
+                  goback={goback}
+                  users={users}
+                  valuelist={valuelist}
+                  setValuelist={setValuelist}
+                  coffeeon={coffeeon}
+                  roomOwner={roomOwner}
+                />
               )}
-            </div>
-          ) : (
-            <div className="Jira-link">
-              <input
-                type="text"
-                className="Jira-Text"
-                value={linkChange}
-                onChange={({ target: { value } }) => setLinkChange(value)}
-                placeholder="Enter Jira Link"
-              />
-              <button
-                className="btn Jira-button"
-                onClick={(event) => {
-                  setShowLinks(true);
-                  sendJira(event); // Call the handler for saving the updated link
-                }}
-              >
-                Save
-              </button>
-            </div>
-          )}
-        </div>
+          </div>
+          <div className="poll-button-container">
+            {roomOwner && !isPolling ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>) : (<></>)}
+          </div>
+          <Timer isPolling={isPolling} coffeeon={coffeeon} />
+          <div className="Jira-outer-link">
+            {showLinks ? (
+              <div className="Jira-link">
+                <a
+                  className={`Jira-text ${linkChange ? "active-link" : "disabled-link"}`}
+                  href={linkChange.startsWith("http") ? linkChange : `https://${linkChange}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  tabIndex={linkChange ? 0 : -1} // Makes it non-focusable when disabled
+                >
+                  Jira Link
+                </a>
+                {roomOwner && (
+                  <button
+                    aria-label="Jira Link Edit"
+                    className="btn rounded"
+                    onClick={() => setShowLinks(false)}
+                  >
+                    <i className="fa fa-pencil"></i>
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="Jira-link">
+                <input
+                  type="text"
+                  className="Jira-Text"
+                  value={linkChange}
+                  onChange={({ target: { value } }) => setLinkChange(value)}
+                  placeholder="Enter Jira Link"
+                />
+                <button
+                  className="btn Jira-button"
+                  onClick={(event) => {
+                    setShowLinks(true);
+                    sendJira(event); // Call the handler for saving the updated link
+                  }}
+                >
+                  Save
+                </button>
+              </div>
+            )}
+          </div>
 
-        <div className="storyDes ">
+          <div className="storyDes ">
 
-          <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll} goback={goback} clearJiraLink={clearJiraLink} />
-        </div>
+            <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll} goback={goback} clearJiraLink={clearJiraLink} />
+          </div>
 
-        <div className={flags === 1 ? "disconnect" : "connect"}>
-          <Cofee onClick={() => {
-            if (!isPolling
-            ) { cafe() }
-          }} />
-        </div>
+          <div className={flags === 1 ? "disconnect" : "connect"}>
+            <Cofee onClick={() => {
+              if (!isPolling
+              ) { cafe() }
+            }} />
+          </div>
 
-        <div className="Hamburgericon" >
-          <Hamburger
-            chatT={chatT}
-            setMessage={setMessage}
-            room={room}
-            name={name}
-            sendMessage={sendMessage}
-            message={message}
-            messages={messages}
-          />
-        </div>
-      </main>
+          <div className="Hamburgericon" >
+            <Hamburger
+              chatT={chatT}
+              setMessage={setMessage}
+              room={room}
+              name={name}
+              sendMessage={sendMessage}
+              message={message}
+              messages={messages}
+            />
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

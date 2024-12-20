@@ -16,8 +16,8 @@ const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset } = requir
 const { getuid } = require('process');
 
 //Listening Port
-const server = app.listen(3000, () => {
-    console.log("server started at port 3000 ");
+const server = app.listen(80, () => {
+    console.log("server started at port 80 ");
 })
 
 const io = new Server(server, {
