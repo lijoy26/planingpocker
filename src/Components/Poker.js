@@ -104,6 +104,7 @@ const Poker = () => {
 
       socket.on("roomData", ({ users }) => {
         setUsers(users);
+        console.log(users);
       });
 
       socket.on("receive", (data) => { });
@@ -188,7 +189,8 @@ const Poker = () => {
     }
   };
   //Name Functions
-  function handleFlag(e) {
+  function handleFlag(e) { 
+    value = value.trim().charAt(0).toUpperCase() + value.trim().slice(1).toLowerCase();
     setName(value);
     setOn(!on);
     history.push(`/poker?name=${value}&room=${room}&roomOwner=${roomOwner}&cardVale=${series}`, {

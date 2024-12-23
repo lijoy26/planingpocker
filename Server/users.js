@@ -2,6 +2,8 @@ var users = [];
 
 const addUser = ({ id, name, room, roomOwner, cardVale }) => {
   name = name.trim().toLowerCase();
+  name = name.charAt(0).toUpperCase() + name.slice(1);
+
   room = room.trim().toLowerCase();
   cardVale = cardVale;
 

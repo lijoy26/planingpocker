@@ -1,4 +1,4 @@
-const Backcard = ({ user }) => {
+const Backcard = ({user}) => {
   if (!user) {
     return null;
   }
