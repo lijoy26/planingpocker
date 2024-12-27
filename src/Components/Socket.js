@@ -5,7 +5,9 @@ let socket;
 
 export const getSocket = () => {
     if (!socket) {
-        socket = io('http://localhost:80')
+        const socketURL = window.location.origin.includes("localhost")
+        ? "http://localhost:80" : window.location.origin;
+        socket = io(socketURL);
     }
     return socket;
 };
