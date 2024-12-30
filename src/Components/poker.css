@@ -242,14 +242,18 @@ header{
 }
 /* Jira Link */
 .Jira-text{
+    text-decoration: none; 
     color: #C10E21;
     padding: 0 !important;
     margin: 0 !important;
     font-size: 1em;
     word-break: keep-all;
+    display: inline-flex;
+    justify-content: center;
 }
 .Jira-text:hover{
     color: #C10E21;
+    text-decoration: none;
 }
 .dispnone{
     display: none;
@@ -276,6 +280,16 @@ input[type=text].Jira-Text{
     padding-inline: 14px;
     border-radius: 8px;
 }
+
+.jira-link-icon{
+    height: 19px;
+    margin-left: 5px;
+    filter: invert(17%) sepia(99%) saturate(7452%) hue-rotate(347deg) brightness(85%) contrast(85%);
+    display: inline-block;
+    vertical-align: middle;
+      
+}
+
 .fa-pencil{
    color: #C10E21;
 }
@@ -298,7 +312,7 @@ input[type=text].Jira-Text{
 .active-link {
     color: #C10E21; 
     pointer-events: auto; 
-    text-decoration: underline;
+    text-decoration: none;
   }
   
 .disabled-link {
@@ -307,6 +321,10 @@ input[type=text].Jira-Text{
     text-decoration: none; 
     cursor: default; 
   }
+
+.disabled-icon {
+    filter: grayscale(100%) opacity(0.6);
+}
 
 .m-content{
     display: flex;

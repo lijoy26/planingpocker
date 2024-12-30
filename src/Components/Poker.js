@@ -6,7 +6,7 @@ import io from "socket.io-client";
 import queryString from "query-string";
 import Logo from "./Logo";
 import ShareLink from "./invite/ShareLink";
-
+import LinkIcon from "../assets/Icons/link-icon.png"
 import StoryDescription from "./StoryDescription";
 import "./poker.css";
 import { useHistory } from "react-router";
@@ -104,6 +104,7 @@ const Poker = () => {
 
       socket.on("roomData", ({ users }) => {
         setUsers(users);
+        console.log(users);
       });
 
       socket.on("receive", (data) => { });
@@ -189,6 +190,7 @@ const Poker = () => {
   };
   //Name Functions
   function handleFlag(e) {
+    value = value.trim().charAt(0).toUpperCase() + value.trim().slice(1).toLowerCase();
     setName(value);
     setOn(!on);
     history.push(`/poker?name=${value}&room=${room}&roomOwner=${roomOwner}&cardVale=${series}`, {
@@ -328,7 +330,7 @@ const Poker = () => {
   }
 
   const clearJiraLink = () => {
-    setLinkChange(""); 
+    setLinkChange("");
   };
 
   useEffect(() => {
@@ -365,11 +367,11 @@ const Poker = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav  d-flex Title">
               <li className="nav-item">
-                {/* <div className="User">
-                  <div className="UserName">  */}
-                {name}
-                {/* </div>
-                </div> */}
+                <div className="User">
+                  <div className="UserName">
+                    {name}
+                  </div>
+                </div>
               </li>
               <li className="nav-item">
                 <ShareLink room={room} cardVal={cardVale} />
@@ -388,7 +390,7 @@ const Poker = () => {
         <div>
           <UsersInRoom users={users} />
         </div>
-        <main className="main-content"> 
+        <main className="main-content">
           <div>
             {flag !== 1 ? (
               <div className="Cards">
@@ -441,9 +443,10 @@ const Poker = () => {
                   href={linkChange.startsWith("http") ? linkChange : `https://${linkChange}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  tabIndex={linkChange ? 0 : -1} 
+                  tabIndex={linkChange ? 0 : -1}
                 >
                   Jira Link
+                  <img src={LinkIcon} className={`jira-link-icon ${linkChange ? "active-icon" : "disabled-icon"}`} />
                 </a>
                 {roomOwner && (
                   <button

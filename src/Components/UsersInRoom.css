@@ -1,6 +1,7 @@
 .users-container {
   width: 250px;
   margin-left: 30px;
+  margin-top: 13px;
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
