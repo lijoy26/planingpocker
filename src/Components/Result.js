@@ -1,5 +1,6 @@
 
 const Result = (props) => {
+
     const finalinputs = props.valuelist.filter((e) => e !== '?')
     var total =0;
     var count = 0;

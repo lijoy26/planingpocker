@@ -15,9 +15,10 @@ import Table from "./Table";
 import Hamburger from "./Hamburger";
 import UsersInRoom from "./UsersInRoom";
 import Cofee from "./Cofee";
-import $, { error } from 'jquery';
+import $, { error, event } from 'jquery';
 import Timer from "./Timer";
 import { getSocket } from "./Socket";
+import Result from "./Result";
 // import socket from "./Socket";
 
 // const socket = io.connect(location.origin);
@@ -39,7 +40,7 @@ const Poker = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isDescription, setIsDescription] = useState(true);
-
+  const [resultsDisplayed,setResultsDisplayed] = useState(false);
   const [hand, setHand] = useState([]);
   const [hand2, setHand2] = useState([]);
   const [selected, setSelected] = useState("");
@@ -149,6 +150,7 @@ const Poker = () => {
       if (enablePolling) {
         socket.emit("enable", "false")
       }
+      setResultsDisplayed(false);
     }
   };
 
@@ -284,7 +286,19 @@ const Poker = () => {
         }
       }
     }
+    // setResultsDisplayed(false);
   }
+
+  const stopPoll = (event) => {
+    event.preventDefault();
+    
+    if (isPolling) {
+      socket.emit("poll","false");
+      setIsPolling(false);
+      socket.emit("updateWaitingWorth", "?");
+    }
+  }
+
   useEffect(() => {
     socket.on("poll", (data) => {
       if (data === 'true') {
@@ -304,6 +318,11 @@ const Poker = () => {
     })
   }, [socket])
 
+  useEffect(()=>{
+    socket.on("pollStopped",()=>{
+      setResultsDisplayed(true);
+    })
+  },[socket])
 
   const showUsers = () => {
 
@@ -428,13 +447,19 @@ const Poker = () => {
                   setValuelist={setValuelist}
                   coffeeon={coffeeon}
                   roomOwner={roomOwner}
+                  setResultsDisplayed={setResultsDisplayed}
                 />
               )}
           </div>
           <div className="poll-button-container">
-            {roomOwner && !isPolling ? (<button className="btn pollButtons" onClick={startPoll}>Poll</button>) : (<></>)}
+            {roomOwner && !resultsDisplayed && (
+              <button className="btn pollButtons"
+              onClick={isPolling ? stopPoll : startPoll}>
+                {isPolling ? "Stop Poll" : "Start Poll"}
+              </button>
+            )}
           </div>
-          <Timer isPolling={isPolling} coffeeon={coffeeon} />
+          <Timer isPolling={isPolling} coffeeon={coffeeon} socket={socket}/>
           <div className="Jira-outer-link">
             {showLinks ? (
               <div className="Jira-link">
@@ -504,6 +529,17 @@ const Poker = () => {
             />
           </div>
         </main>
+        <div>
+          {/* {resultsDisplayed && 
+          <Result 
+           users={users}
+           hand={hand}
+           valuelist={voteResult}
+           goback={goback}
+           coffeeon={coffeeon}
+           roomOwner={roomOwner}
+          />} */}
+        </div>
       </div>
     </div>
   );

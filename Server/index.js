@@ -14,6 +14,7 @@ app.get('/*', (req, res) => {
 
 const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset } = require('./users.js');
 const { getuid } = require('process');
+const { isPlainObject } = require('jquery');
 
 //Listening Port
 const server = app.listen(80, () => {
@@ -127,8 +128,41 @@ io.on("connection", function (socket) {
                 }
 
                 io.in(room).emit("poll", data);
+                // io.in(user.room).emit("preach", roomUser);
             }
         }
+    });
+
+    // socket.on("updateWaitingWorth",(newWorth)=> {
+    //     const user = getUser(socket.id);
+
+    //     const roomID = user.room;
+
+    //     const roomUsers = getUsersInRoom(roomID);
+
+    //     roomUsers.forEach((u)=> {
+    //         if(u.worth === 'waiting') {
+    //             u.worth = '?';
+    //         }
+    //     });
+
+    //     io.to(roomID).emit("roomData", { users: roomUsers });
+    //     io.to(roomID).emit("pollStopped");
+
+    // })
+    socket.on("updateWaitingWorth", () => {
+        const user = getUser(socket.id);
+    
+        if (user) {
+            // Call timerCallback with the user's room and ID
+            timerCallback(user.room, socket.id);
+        }
+    });
+
+    socket.on("freezeTimer",()=>{
+        const user = getUser(socket.id);
+        const room = user.room;
+        io.to(room).emit("freezeTimer");
     });
 
     //Enable Polling

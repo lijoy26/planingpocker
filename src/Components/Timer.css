@@ -1,0 +1,25 @@
+.timer {
+    /* font-size: 2rem; */
+    transition: color 0.3s ease;
+}
+  
+.critical {
+    color: red;
+}
+
+.blinking {
+    animation: blink 1s step-start infinite;
+}
+
+.remaining-time{
+    font-size: 20px;
+    margin: 5px;
+    font-weight: bolder;
+}
+
+@keyframes blink {
+
+    50% { 
+      transform: scale(1.1); 
+    }
+  }

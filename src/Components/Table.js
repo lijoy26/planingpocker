@@ -7,6 +7,7 @@ import Backcard from "./backcard";
 import './Table.css'
 const Table = (props) => {
   const hand = props.hand;
+  const setResultsDisplayed = props.setResultsDisplayed
   const socket = props.socket;
   const [votes,setVotes] = useState({});
   const coffeeon = props.coffeeon;
@@ -43,6 +44,14 @@ const Table = (props) => {
   const allVotesComplete = !Object.values(votes).includes("waiting");
   console.log(Object.values(votes));
   console.log("votes",votes);
+
+  useEffect(() => {
+    setResultsDisplayed(allVotesComplete);
+    
+    if(allVotesComplete) {
+      socket.emit("freezeTimer");
+    }
+  }, [allVotesComplete, setResultsDisplayed,socket]);
 
   return (
     <div className="theTable">
