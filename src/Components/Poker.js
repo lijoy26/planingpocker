@@ -47,7 +47,6 @@ const Poker = () => {
   const [placed, setPlaced] = useState([]);
   const [numberofuser, setNumberofuser] = useState(null);
   const [flag, setFlag] = useState(false);
-
   const [on, setOn] = useState(false);
   const [chatT, setChatT] = useState(false);
   const [onBlur, setOnBlur] = useState(true);
@@ -529,17 +528,6 @@ const Poker = () => {
             />
           </div>
         </main>
-        <div>
-          {/* {resultsDisplayed && 
-          <Result 
-           users={users}
-           hand={hand}
-           valuelist={voteResult}
-           goback={goback}
-           coffeeon={coffeeon}
-           roomOwner={roomOwner}
-          />} */}
-        </div>
       </div>
     </div>
   );

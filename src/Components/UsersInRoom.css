@@ -45,7 +45,8 @@
 
 .user-item {
   font-size: 14px;
-  color: #333;
+  color: #0d7882;
+  font-weight: bold;
   padding: 10px; 
   border-bottom: 1px solid #f0f0f0;
   background-color: transparent;
@@ -66,7 +67,7 @@
   font-weight: bold;
 } 
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
   .users-container {
     width: 200px;
     position: fixed;
@@ -104,7 +105,7 @@
   }
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 992px) {
   .toggle-button {
     display: none;
   }

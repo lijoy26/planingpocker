@@ -7,9 +7,9 @@ import Backcard from "./backcard";
 import './Table.css'
 const Table = (props) => {
   const hand = props.hand;
-  const setResultsDisplayed = props.setResultsDisplayed
+  const setResultsDisplayed = props.setResultsDisplayed;
   const socket = props.socket;
-  const [votes,setVotes] = useState({});
+  const [votes, setVotes] = useState({});
   const coffeeon = props.coffeeon;
   useEffect(() => {
     if (!coffeeon) {
@@ -17,60 +17,49 @@ const Table = (props) => {
     }
   }, [socket]);
 
-  useEffect(()=>{
-    socket.on("preach",(data) => {
+  useEffect(() => {
+    socket.on("preach", (data) => {
       if (data === "reset") {
         setVotes({});
       } else {
-        const updatedVotes = data.reduce((acc,user)=> {
+        const updatedVotes = data.reduce((acc, user) => {
           acc[user.id] = user.worth;
           return acc;
-        },{});
+        }, {});
         setVotes(updatedVotes);
       }
     })
 
-    socket.on("roomData",(data) => {
-        const updatedVotes = data.users.reduce((acc,user)=> {
+    socket.on("roomData", (data) => {
+      const updatedVotes = data.users.reduce((acc, user) => {
         acc[user.id] = user.worth;
         return acc;
-      },{});
+      }, {});
       setVotes(updatedVotes);
     })
 
 
-  },[socket]);
+  }, [socket]);
 
   const allVotesComplete = !Object.values(votes).includes("waiting");
   console.log(Object.values(votes));
-  console.log("votes",votes);
+  console.log("votes", votes);
 
   useEffect(() => {
     setResultsDisplayed(allVotesComplete);
-    
-    if(allVotesComplete) {
+
+    if (allVotesComplete) {
       socket.emit("freezeTimer");
     }
-  }, [allVotesComplete, setResultsDisplayed,socket]);
+  }, [allVotesComplete, setResultsDisplayed, socket]);
 
   return (
-    <div className="theTable">
-      <div className="cardplaced">
-        <div className="Results">
-          {allVotesComplete ? (
-            <Result
-              hand={hand}
-              valuelist={Object.values(votes)}
-              goback={props.goback}
-              coffeeon={coffeeon}
-              roomOwner={props.roomOwner}
-            />
-          ) : (<p></p>)
-          }
-        </div>
-        <div className="placedCards">
+    <div className="table-comp">
+      <div className="theTable">
+        <div className="cardplaced">
+          <div className="placedCards">
             {
-              props.users.map((user) => 
+              props.users.map((user) =>
                 votes[user.id] !== "waiting" ? (
                   <Placedcard key={user.id} value={votes[user.id]} user={user} />
                 ) : (
@@ -78,8 +67,21 @@ const Table = (props) => {
                 )
               )
             }
-
+          </div>
         </div>
+      </div>
+      <div className="Results">
+        {allVotesComplete ? (
+          <Result
+            users={props.users}
+            hand={hand}
+            valuelist={Object.values(votes)}
+            goback={props.goback}
+            coffeeon={coffeeon}
+            roomOwner={props.roomOwner}
+          />
+        ) : (<p></p>)
+        }
       </div>
     </div>
   )

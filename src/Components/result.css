@@ -1,0 +1,150 @@
+.result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    max-width: 400px;
+    margin: 20px;
+    position: absolute; 
+    top: 120px; 
+    right: 20px; 
+    z-index: 10; 
+  }
+  
+  .outcome {
+    color: #c10e21;
+    font-weight: bolder;
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .score-summary {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .score-item:first-child {
+    border-top: 1px solid #ddd;
+  }
+  
+  .score-value {
+    font-weight: bold;
+    color: #0d7882;
+  }
+  
+  .score-count {
+    color: #555;
+  }
+  
+  .send {
+    background-color: #c10e21;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .send:hover {
+    background-color: #9D0B1B;
+  }
+  
+
+  @media (max-width: 600px) {
+    .result {
+      width: 200px; 
+      padding: 15px; 
+    }
+  
+    .outcome {
+      font-size: 18px; 
+    }
+  
+    .score-item {
+      padding: 8px 10px; 
+    }
+  
+    .send {
+      padding: 8px 15px; 
+      font-size: 14px; 
+    }
+  }
+  
+  .outcome {
+    color: #c10e21;
+    font-weight: bolder;
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .score-summary {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .score-item:first-child {
+    border-top: 1px solid #ddd;
+  }
+  
+  .score-value {
+    font-weight: bold;
+    color: #0d7882;
+  }
+  
+  .score-count {
+    color: #555;
+  }
+  
+  .send {
+    background-color: #c10e21;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .send:hover {
+    background-color: #9D0B1B;
+  }
+
+  @media (max-width: 1096px) {
+    .result {
+      position: static; /* Remove absolute positioning */
+      top: auto;        /* Reset top property */
+      right: auto;      /* Reset right property */
+      z-index: auto;    /* Reset z-index */
+      max-width: none;
+      margin: 10px auto; /* Center and add smaller margin */
+    }
+  }
