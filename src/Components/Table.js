@@ -44,12 +44,11 @@ const Table = (props) => {
   const allVotesComplete = !Object.values(votes).includes("waiting");
   console.log(Object.values(votes));
   console.log("votes", votes);
-
   useEffect(() => {
     setResultsDisplayed(allVotesComplete);
-
+    console.log("allvotes",allVotesComplete);
     if (allVotesComplete) {
-      socket.emit("freezeTimer");
+      
     }
   }, [allVotesComplete, setResultsDisplayed, socket]);
 

@@ -232,6 +232,11 @@ header{
   color: white;
 }
 
+.pollButtons:hover{
+    color: white;
+    background-color: #9D0B1B;
+}
+
 .disconnect button{
     background-color: #C10E21;
     position: fixed;
