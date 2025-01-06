@@ -81,7 +81,7 @@ io.on("connection", function (socket) {
         const user = getUser(socket.id);
         if (user) {
             io.in(user.room).emit("story", data);
-
+            io.in(user.room).emit("isStoryAvailable",true);
         }
     })
 
@@ -89,7 +89,7 @@ io.on("connection", function (socket) {
         const user = getUser(socket.id);
         if (user) {
             io.in(user.room).emit("clearStory");
-
+            io.in(user.room).emit("isStoryAvailable",false);
         }
     })
 

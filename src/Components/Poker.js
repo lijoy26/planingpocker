@@ -52,6 +52,7 @@ const Poker = () => {
   const [onBlur, setOnBlur] = useState(true);
   var [noName, setNoName] = useState(false);
   var [flags, noflags] = useState(0);
+  const [isStoryAvailable,setIsStoryAvailable] = useState(false);
   const [coffeeon, setCoffeeOn] = useState(false);
 
   const [valuelist, setValuelist] = useState([]);
@@ -308,6 +309,12 @@ const Poker = () => {
     })
   }, [socket])
 
+  useEffect(()=> {
+    socket.on("isStoryAvailable",(data) => {
+      setIsStoryAvailable(data);
+    })
+  },[socket])
+
   useEffect(() => {
     socket.on("enable", (data) => {
       if (data === 'true')
@@ -453,7 +460,8 @@ const Poker = () => {
           <div className="poll-button-container">
             {roomOwner && !resultsDisplayed && (
               <button className="btn pollButtons"
-              onClick={isPolling ? stopPoll : startPoll}>
+              onClick={isPolling ? stopPoll : startPoll}
+              disabled={!isStoryAvailable} >
                 {isPolling ? "Stop Poll" : "Start Poll"}
               </button>
             )}

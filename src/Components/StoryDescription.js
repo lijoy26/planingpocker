@@ -17,6 +17,7 @@ const StoryDescription = (props) => {
     if (!coffeeon) {
       if (stor) {
         socket.emit("story", stor);
+        socket.emit("isStoryAvailable",true);
         setLastSentStor(stor);
         setButtonLabel("Edit");
         setIsInputDisabled(true);
@@ -41,6 +42,7 @@ const StoryDescription = (props) => {
     goback();
     socket.emit("clearStory");
     socket.emit("clearJiraLink");
+    socket.emit("isStoryAvailable",false);
   };
 
   useEffect(() => {
@@ -98,6 +100,7 @@ const StoryDescription = (props) => {
                   sendStory();
                 }
               }}
+              disabled={!stor.trim()}
             >{buttonLabel}</button>)}
 
           {roomOwner  && buttonLabel !== "Send" && (
