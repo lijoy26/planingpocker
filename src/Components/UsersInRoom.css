@@ -44,9 +44,9 @@
 }
 
 .user-item {
-  display: flex; /* Use flexbox for alignment */
-  align-items: center; /* Vertically center items */
-  justify-content: space-between; /* Push the tick icon to the right */
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
   font-size: 14px;
   color: #0d7882;
   font-weight: bold;
@@ -66,7 +66,7 @@
 .tick-icon {
   width: 16px;
   height: 16px;
-  margin-left: auto; /* Ensures it's pushed to the far right */
+  margin-left: auto; 
 }
 
 
