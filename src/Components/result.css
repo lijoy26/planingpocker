@@ -31,12 +31,22 @@
     margin-bottom: 20px;
   }
   
+  .score-heading{
+    display: flex;
+    justify-content: space-between;
+    font-weight: 900;
+    color: red;
+    border-bottom: 1px solid #ddd;
+    /* text-decoration: underline; */
+  }
+
   .score-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 15px;
     border-bottom: 1px solid #ddd;
+    
   }
   
   .score-item:first-child {

@@ -44,16 +44,18 @@
 }
 
 .user-item {
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Vertically center items */
+  justify-content: space-between; /* Push the tick icon to the right */
   font-size: 14px;
   color: #0d7882;
   font-weight: bold;
-  padding: 10px; 
+  padding: 10px;
   border-bottom: 1px solid #f0f0f0;
   background-color: transparent;
   white-space: nowrap; 
   text-overflow: ellipsis;
   overflow: hidden; 
-  display: block; 
 }
 
 .user-item:hover {
@@ -61,11 +63,21 @@
   cursor: pointer;
 }
 
+.tick-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: auto; /* Ensures it's pushed to the far right */
+}
+
+
 .room-owner {
+  padding-left: 5px;
   font-size: 12px;
   color: #c10e21;
   font-weight: bold;
 } 
+
+
 
 @media screen and (max-width: 992px) {
   .users-container {

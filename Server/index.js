@@ -133,23 +133,7 @@ io.on("connection", function (socket) {
         }
     });
 
-    // socket.on("updateWaitingWorth",(newWorth)=> {
-    //     const user = getUser(socket.id);
 
-    //     const roomID = user.room;
-
-    //     const roomUsers = getUsersInRoom(roomID);
-
-    //     roomUsers.forEach((u)=> {
-    //         if(u.worth === 'waiting') {
-    //             u.worth = '?';
-    //         }
-    //     });
-
-    //     io.to(roomID).emit("roomData", { users: roomUsers });
-    //     io.to(roomID).emit("pollStopped");
-
-    // })
     socket.on("updateWaitingWorth", () => {
         const user = getUser(socket.id);
     
@@ -226,15 +210,23 @@ io.on("connection", function (socket) {
         console.log(roomUser);
         io.in(user.room).emit("selected", data);
         io.in(user.room).emit("preach", roomUser);
+        io.to(user.room).emit("roomData", {
+            room: user.room,
+            users: roomUser,
+        });
     })
     socket.on("preach", function (data) {
-        if (data === 'reset') {
+        if (data === "reset") {
             const user = getUser(socket.id);
             reset(user.room)
             roomUser = getUsersInRoom(user.room);
            
-            io.in(user.room).emit("preach", 'reset');
+            io.in(user.room).emit("preach", "reset");
             io.in(user.room).emit("preach", roomUser);
+            io.to(user.room).emit("roomData", {
+                room: user.room,
+                users: roomUser,
+            });
         }
     })
 

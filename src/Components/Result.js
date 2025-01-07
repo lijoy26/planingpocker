@@ -38,10 +38,14 @@ const Result = (props) => {
       <h2 className="outcome">Summary</h2>
       </div>
       <div className="score-summary">
+        <div className="score-heading">
+          <span>Points</span>
+          <span>Votes</span>
+        </div>
         {Object.entries(scoreSummary).map(([score, count]) => (
           <div key={score} className="score-item">
             <span className="score-value">{score}</span>
-            <span className="score-count">{count } {count > 1 ? " votes" : " vote"}</span>
+            <span className="score-count">{count }</span>
           </div>
         ))}
       </div>
