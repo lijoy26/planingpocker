@@ -462,7 +462,7 @@ const Poker = () => {
               <button className="btn pollButtons"
               onClick={isPolling ? stopPoll : startPoll}
               disabled={!isStoryAvailable} >
-                {isPolling ? "Stop Poll" : "Start Poll"}
+                {isPolling ? "End Poll" : "Start Poll"}
               </button>
             )}
           </div>
