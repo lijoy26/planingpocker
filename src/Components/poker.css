@@ -232,6 +232,11 @@ header{
   color: white;
 }
 
+.pollButtons:hover{
+    color: white;
+    background-color: #9D0B1B;
+}
+
 .disconnect button{
     background-color: #C10E21;
     position: fixed;
@@ -328,8 +333,22 @@ input[type=text].Jira-Text{
 
 .m-content{
     display: flex;
+    flex-direction: row;
+    align-items: flex-start;
 }
 
+.main-content {
+    display: flex;
+    flex-direction: column;
+    margin-right: 300px;
+}
+
+@media (max-width: 1096px) {
+    .main-content {
+      margin-right: 50px; 
+    }
+  
+}
 
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
     .blurred-container {

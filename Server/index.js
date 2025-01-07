@@ -14,6 +14,7 @@ app.get('/*', (req, res) => {
 
 const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset } = require('./users.js');
 const { getuid } = require('process');
+const { isPlainObject } = require('jquery');
 
 //Listening Port
 const server = app.listen(80, () => {
@@ -80,7 +81,7 @@ io.on("connection", function (socket) {
         const user = getUser(socket.id);
         if (user) {
             io.in(user.room).emit("story", data);
-
+            io.in(user.room).emit("isStoryAvailable",true);
         }
     })
 
@@ -88,7 +89,7 @@ io.on("connection", function (socket) {
         const user = getUser(socket.id);
         if (user) {
             io.in(user.room).emit("clearStory");
-
+            io.in(user.room).emit("isStoryAvailable",false);
         }
     })
 
@@ -127,8 +128,25 @@ io.on("connection", function (socket) {
                 }
 
                 io.in(room).emit("poll", data);
+                // io.in(user.room).emit("preach", roomUser);
             }
         }
+    });
+
+
+    socket.on("updateWaitingWorth", () => {
+        const user = getUser(socket.id);
+    
+        if (user) {
+            // Call timerCallback with the user's room and ID
+            timerCallback(user.room, socket.id);
+        }
+    });
+
+    socket.on("freezeTimer",()=>{
+        const user = getUser(socket.id);
+        const room = user.room;
+        io.to(room).emit("freezeTimer");
     });
 
     //Enable Polling
@@ -192,15 +210,23 @@ io.on("connection", function (socket) {
         console.log(roomUser);
         io.in(user.room).emit("selected", data);
         io.in(user.room).emit("preach", roomUser);
+        io.to(user.room).emit("roomData", {
+            room: user.room,
+            users: roomUser,
+        });
     })
     socket.on("preach", function (data) {
-        if (data === 'reset') {
+        if (data === "reset") {
             const user = getUser(socket.id);
             reset(user.room)
             roomUser = getUsersInRoom(user.room);
            
-            io.in(user.room).emit("preach", 'reset');
+            io.in(user.room).emit("preach", "reset");
             io.in(user.room).emit("preach", roomUser);
+            io.to(user.room).emit("roomData", {
+                room: user.room,
+                users: roomUser,
+            });
         }
     })
 

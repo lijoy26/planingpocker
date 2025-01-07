@@ -1,9 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
+import "./Timer.css";
 
-const Timer = ({ isPolling, coffeeon }) => {
+const Timer = ({ isPolling, coffeeon,socket }) => {
+
+  // const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef(null);
   const [timer, setTimer] = useState("00:00");
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isCritical,setIsCritical] = useState(false);
+  const [isBlinking,setIsBlinking] = useState(false);
 
   const getTimeRemaining = (endTime) => {
     const total = Date.parse(endTime) - Date.parse(new Date());
@@ -19,11 +24,23 @@ const Timer = ({ isPolling, coffeeon }) => {
   };
 
   const startTimer = (endTime) => {
+    // if (isPaused) return;
     let { total, hours, minutes, seconds } = getTimeRemaining(endTime);
     if (total >= 0) {
       setTimer(
         `${minutes > 9 ? minutes : "0" + minutes}:${seconds > 9 ? seconds : "0" + seconds}`
       );
+
+      if(total <= 20000) {
+        setIsCritical(true);
+        setIsBlinking(true);
+      } else {
+        setIsBlinking(false);
+        setIsCritical(false);
+      }
+    } else {
+      setIsBlinking(false);
+      setIsCritical(false);
     }
   };
 
@@ -45,6 +62,7 @@ const Timer = ({ isPolling, coffeeon }) => {
     return deadline;
   };
 
+
   useEffect(() => {
     if (isPolling && !coffeeon) {
       // Start the timer when isPolling becomes true
@@ -55,6 +73,8 @@ const Timer = ({ isPolling, coffeeon }) => {
       if (timerRef.current) clearInterval(timerRef.current);
       setIsTimerRunning(false);
       setTimer("00:00");
+      setIsCritical(false);
+      setIsBlinking(false);
     }
 
     // Cleanup function for useEffect
@@ -65,9 +85,16 @@ const Timer = ({ isPolling, coffeeon }) => {
 
   return (
     <div style={{ textAlign: "center", margin: "auto" }}>
-      <h2>{timer}</h2>
+      {isPolling ? <p className="remaining-time">Remaining Time</p> : ""}
+      <h2
+        className={`timer ${isCritical ? "critical" : ""} ${isBlinking ? "blinking" : ""}`}
+      >
+        {timer}
+      </h2>
     </div>
   );
 };
 
 export default Timer;
+
+
