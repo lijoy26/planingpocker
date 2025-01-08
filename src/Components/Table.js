@@ -11,6 +11,8 @@ const Table = (props) => {
   const socket = props.socket;
   const [votes, setVotes] = useState({});
   const coffeeon = props.coffeeon;
+  const [allVotesComplete,setAllVotesComplete] = useState(false);;
+
   useEffect(() => {
     if (!coffeeon) {
       socket.emit("selected", props.value)
@@ -21,6 +23,7 @@ const Table = (props) => {
     socket.on("preach", (data) => {
       if (data === "reset") {
         setVotes({});
+        setAllVotesComplete(false); 
       } else {
         const updatedVotes = data.reduce((acc, user) => {
           acc[user.id] = user.worth;
@@ -40,15 +43,17 @@ const Table = (props) => {
 
 
   }, [socket]);
+  
+  useEffect(() => {
+    const checkVotesComplete = !Object.values(votes).includes("waiting");
+    setAllVotesComplete(checkVotesComplete);
+    console.log("allvotes", checkVotesComplete);
+  }, [votes]);
 
-  const allVotesComplete = !Object.values(votes).includes("waiting");
-  console.log(Object.values(votes));
-  console.log("votes", votes);
   useEffect(() => {
     setResultsDisplayed(allVotesComplete);
     console.log("allvotes",allVotesComplete);
     if (allVotesComplete) {
-      
     }
   }, [allVotesComplete, setResultsDisplayed, socket]);
 

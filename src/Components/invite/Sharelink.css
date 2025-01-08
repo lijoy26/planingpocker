@@ -34,12 +34,21 @@
 }
 
 .copyText {
-  margin-top: 10px;
-  padding: 5px;
-  display: flex;
-  justify-content: center;
+  color: #c10e21;
+  font-weight: bold;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none; 
 }
 
+.copyText:focus,
+.copyText:active {
+  outline: none !important; 
+  border: none !important; 
+  box-shadow: none !important; 
+
+}
 
 [role=tooltip].popup-content {
   display: block;
