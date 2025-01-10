@@ -16,47 +16,66 @@
     flex: 2; 
 }
 
-.placedCards{
+.placedCards {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     align-items: flex-start;
-}
-.placedcard{
-     height:70px;
-     width:50px;
-     background-color: #A7D9D8;
-     border:1px solid #0D7882;
-     border-radius: 4px;
-     opacity: 1;
-     cursor: pointer;
-     margin: 8px;
-     padding: 10px;
-     display:flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
-    
-}
-.cardplaced{
+  }
+  
+  .placedcard, 
+  .backcard { /* Common styles for both cards */
+    height: 70px;
+    width: 50px;
+    border-radius: 6px; /* Slightly rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    cursor: pointer;
+    margin: 8px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+  }
+  
+  .placedcard {
+    background: linear-gradient(145deg, #d4ebf2, #83c8d6); /* Softer gradient for a modern look */
+    border: 1px solid #0d7882;
+  }
+  
+  .backcard {
+    background: white; 
+    border: 1px solid #0d7882; /* Same border as placedcard */
+  }
+  
+  .lock-icon{
+  width: 16px;
+  height: 16px;
+  }
+
+.showVotes-btn-container{
+    display: flex;
+    justify-content:left
 }
 
-.backcard{
-    height:62px;
-    width:44px;
-    background-color: white;
-    border: 1px solid #00BACD;
-    border-radius: 4px;
-    opacity: 1;
-    cursor: pointer;
-    margin:20px;
+.showVotes-btn{
+    font-weight: bold;
+    background-color:#c10e21;
+    color: white;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+    margin: 5px;
+    margin-top: 10px;
+    margin-left: 24px;
+    border-radius: 5px;
 }
 
+.showVotes-btn:hover{
+    color: white;
+    background-color: #9D0B1B;
+}
 
 
 /* .result{
@@ -68,7 +87,7 @@
 } */
 
 .outcome{
-    color:#c10e21 ;
+    color:#c10e21;
     font-weight: bold;
     font-size: 22px;
     margin-bottom: 0px;
@@ -79,10 +98,13 @@
     display: flex;
     font-size: 12px;
     /* word-break: break-all; */
+    color: #0d7882;
     justify-content: center;
 }
 .value{
    font-size: 18px;
+   font-weight: bold;
+   color: #143d41;
     display: flex;
 }
 
