@@ -94,7 +94,7 @@ const Poker = () => {
       });
     }
   }, [socket, location.search]);
-  useEffect(() => { }, [socket]);
+ 
   //Chat
 
   useEffect(() => {
