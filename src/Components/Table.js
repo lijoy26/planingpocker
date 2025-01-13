@@ -11,7 +11,8 @@ const Table = (props) => {
   const socket = props.socket;
   const [votes, setVotes] = useState({});
   const coffeeon = props.coffeeon;
-  const [allVotesComplete,setAllVotesComplete] = useState(false);;
+  const [allVotesComplete,setAllVotesComplete] = useState(false);
+  const [displayVotes,setDisplayVotes] = useState(false);
 
   useEffect(() => {
     if (!coffeeon) {
@@ -57,6 +58,10 @@ const Table = (props) => {
     }
   }, [allVotesComplete, setResultsDisplayed, socket]);
 
+  const showVotes = () => {
+    setDisplayVotes(!displayVotes);
+  }
+
   return (
     <div className="table-comp">
       <div className="theTable">
@@ -65,14 +70,17 @@ const Table = (props) => {
             {
               props.users.map((user) =>
                 votes[user.id] !== "waiting" ? (
-                  <Placedcard key={user.id} value={votes[user.id]} user={user} />
+                  <Placedcard key={user.id} value={votes[user.id]} user={user} displayVotes={displayVotes}/>
                 ) : (
                   <Backcard key={user.id} user={user} />
                 )
               )
             }
           </div>
+          <div className="showVotes-btn-container">
+            <button className='showVotes-btn' onClick={showVotes}>{displayVotes ? "Hide" : "Show"}</button>
         </div>
+        </div> 
       </div>
       <div className="Results">
         {allVotesComplete ? (

@@ -110,11 +110,6 @@ const Content = () => {
          alert("Required!!");
       }
       setPatternValue(value);
-      setTimeout(() => {
-         console.log(patternValue);
-         console.log(cardVal);
-      }, 2000);
-
    }
 
 

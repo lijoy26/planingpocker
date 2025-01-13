@@ -13,8 +13,6 @@ app.get('/*', (req, res) => {
 });
 
 const { addUser, removeUser, getUser, getUsersInRoom, addWorth, reset } = require('./users.js');
-const { getuid } = require('process');
-const { isPlainObject } = require('jquery');
 
 //Listening Port
 const server = app.listen(80, () => {
@@ -26,6 +24,7 @@ const io = new Server(server, {
         origin: "*",
         methods: ["GET", "POST"],
     },
+    maxHttpBufferSize: 1e6,
 });
 
 // Function to store timers and clear them when needed
@@ -113,7 +112,7 @@ io.on("connection", function (socket) {
                 // Check if there is an active timer for the room and clear it
                 if (activeTimers[room]) {
                     clearTimeout(activeTimers[room]);
-                   
+                    delete activeTimers[room];
                 }
 
                 // Set a new 90-second timer
@@ -124,7 +123,7 @@ io.on("connection", function (socket) {
                 // Check if there is an active timer for the room and clear it
                 if (activeTimers[room]) {
                     clearTimeout(activeTimers[room]);
-                  
+                    delete activeTimers[room];
                 }
 
                 io.in(room).emit("poll", data);
@@ -143,11 +142,11 @@ io.on("connection", function (socket) {
         }
     });
 
-    socket.on("freezeTimer",()=>{
-        const user = getUser(socket.id);
-        const room = user.room;
-        io.to(room).emit("freezeTimer");
-    });
+    // socket.on("freezeTimer",()=>{
+    //     const user = getUser(socket.id);
+    //     const room = user.room;
+    //     io.to(room).emit("freezeTimer");
+    // });
 
     //Enable Polling
     socket.on("enable", function (data) {

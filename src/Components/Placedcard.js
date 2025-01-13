@@ -1,5 +1,7 @@
 import './Table.css'
-const Placedcard = ({ value, user}) => {
+import lockIcon from "../assets/Icons/lock.png"
+
+const Placedcard = ({ value, user,displayVotes}) => {
 
   if (!user) {
     return null;
@@ -7,11 +9,12 @@ const Placedcard = ({ value, user}) => {
   
     return (
         <div className="d-flex card-total">
-          <label className="visuallyhidden">
-            The value clicked by {user.name} is {value}.  
-          </label>
         <button aria-disabled="true" className="placedcard">
-              <div className="value">{value}</div>
+              <div className="value">{displayVotes ?  value : <img
+                    src={lockIcon}
+                    alt="Voted"
+                    className="lock-icon"
+                  />}</div>
       </button>
         <div className="user-name" >
         {user.name}
