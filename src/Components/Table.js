@@ -45,16 +45,23 @@ const Table = (props) => {
 
   }, [socket]);
   
+  // useEffect(() => {
+  //   const checkVotesComplete = !Object.values(votes).includes("waiting");
+  //   setAllVotesComplete(checkVotesComplete);
+  //   console.log("allvotes", checkVotesComplete);
+  // }, [votes]);
+
   useEffect(() => {
-    const checkVotesComplete = !Object.values(votes).includes("waiting");
+    // Check if all votes are complete only when all users have voted
+    const checkVotesComplete = !Object.values(votes).includes("waiting") && Object.keys(votes).length === props.users.length;
     setAllVotesComplete(checkVotesComplete);
-    console.log("allvotes", checkVotesComplete);
-  }, [votes]);
+  }, [votes, props.users.length]);
 
   useEffect(() => {
     setResultsDisplayed(allVotesComplete);
     console.log("allvotes",allVotesComplete);
     if (allVotesComplete) {
+      socket.emit("freezeTimer");
     }
   }, [allVotesComplete, setResultsDisplayed, socket]);
 

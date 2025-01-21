@@ -32,7 +32,7 @@ const activeTimers = {};
 
 // Function to be executed when the timer completes
 const timerCallback = (room, id) => {
-    
+
     const user = getUser(id);
     if (user) {
         io.in(user.room).emit("enable", "false");
@@ -53,7 +53,7 @@ const timerCallback = (room, id) => {
 io.on("connection", function (socket) {
     //Join into the room
 
-    socket.on('validateRoom',(roomID,callback)=>{
+    socket.on('validateRoom', (roomID, callback) => {
         if (rooms.has(roomID)) {
             callback(false);
         } else {
@@ -64,7 +64,7 @@ io.on("connection", function (socket) {
     socket.on('join', ({ name, room, roomOwner, cardVale }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room, roomOwner, cardVale });
         if (error) return callback(error);
-        
+
         rooms.add(room);
         socket.join(room);
 
@@ -80,7 +80,7 @@ io.on("connection", function (socket) {
         const user = getUser(socket.id);
         if (user) {
             io.in(user.room).emit("story", data);
-            io.in(user.room).emit("isStoryAvailable",true);
+            io.in(user.room).emit("isStoryAvailable", true);
         }
     })
 
@@ -88,11 +88,11 @@ io.on("connection", function (socket) {
         const user = getUser(socket.id);
         if (user) {
             io.in(user.room).emit("clearStory");
-            io.in(user.room).emit("isStoryAvailable",false);
+            io.in(user.room).emit("isStoryAvailable", false);
         }
     })
 
-    socket.on("clearJiraLink", function() {
+    socket.on("clearJiraLink", function () {
         const user = getUser(socket.id);
         if (user) {
             io.in(user.room).emit("clearJiraLink");
@@ -106,7 +106,7 @@ io.on("connection", function (socket) {
             const room = user.room;
 
             if (data === 'true') {
-             
+
                 io.in(room).emit("poll", data);
 
                 // Check if there is an active timer for the room and clear it
@@ -118,7 +118,7 @@ io.on("connection", function (socket) {
                 // Set a new 90-second timer
                 activeTimers[room] = setTimeout(() => timerCallback(room, socket.id), 60 * 1000);
             } else if (data === 'false') {
-                
+
 
                 // Check if there is an active timer for the room and clear it
                 if (activeTimers[room]) {
@@ -135,18 +135,20 @@ io.on("connection", function (socket) {
 
     socket.on("updateWaitingWorth", () => {
         const user = getUser(socket.id);
-    
+
         if (user) {
             // Call timerCallback with the user's room and ID
             timerCallback(user.room, socket.id);
         }
     });
 
-    // socket.on("freezeTimer",()=>{
-    //     const user = getUser(socket.id);
-    //     const room = user.room;
-    //     io.to(room).emit("freezeTimer");
-    // });
+    socket.on("freezeTimer", () => {
+        const user = getUser(socket.id);
+        if (user) {
+            const room = user.room;
+            io.to(room).emit("freezeTimer");
+        }
+    });
 
     //Enable Polling
     socket.on("enable", function (data) {
@@ -191,12 +193,12 @@ io.on("connection", function (socket) {
                 users: UsersInRoom,
             });
 
-            if (UsersInRoom.length === 0){
-                
+            if (UsersInRoom.length === 0) {
+
                 rooms.delete(user.room);
             }
         }
-        
+
         io.sockets.emit("playerdet", roomUser.length);
     });
 
@@ -219,7 +221,7 @@ io.on("connection", function (socket) {
             const user = getUser(socket.id);
             reset(user.room)
             roomUser = getUsersInRoom(user.room);
-           
+
             io.in(user.room).emit("preach", "reset");
             io.in(user.room).emit("preach", roomUser);
             io.to(user.room).emit("roomData", {
