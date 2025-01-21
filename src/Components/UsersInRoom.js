@@ -18,7 +18,7 @@ const UsersInRoom = ({ users }) => {
       </button>
 
       <div className={`users-container ${isSidebarVisible ? "visible" : "hidden"}`}>
-        <h3 className="user-title">Users in Room</h3>
+        <h3 className="user-title">Users in Rooms</h3>
         <div className="users-list">
           {users && users.length > 0 ? (
             users.map(({ name, id, roomOwner,worth }) => (
