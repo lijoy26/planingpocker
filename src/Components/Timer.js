@@ -24,8 +24,8 @@ const Timer = ({ isPolling, coffeeon,socket }) => {
   };
 
   const startTimer = (endTime) => {
-    // if (isPaused) return;
-    let { total, hours, minutes, seconds } = getTimeRemaining(endTime);
+
+    let { total, minutes, seconds } = getTimeRemaining(endTime);
     if (total >= 0) {
       setTimer(
         `${minutes > 9 ? minutes : "0" + minutes}:${seconds > 9 ? seconds : "0" + seconds}`
@@ -46,7 +46,6 @@ const Timer = ({ isPolling, coffeeon,socket }) => {
 
   const clearTimer = (endTime) => {
     if (timerRef.current) clearInterval(timerRef.current);
-
     startTimer(endTime);
 
     const id = setInterval(() => {
@@ -83,6 +82,18 @@ const Timer = ({ isPolling, coffeeon,socket }) => {
     };
   }, [isPolling]); // Trigger effect when isPolling changes
 
+  useEffect(()=>{
+    socket.on("freezeTimer",()=>{
+      if(timerRef.current) clearInterval(timerRef.current);
+      setIsTimerRunning(false);
+      setIsBlinking(false);
+    });
+    return () => {
+      socket.off("freezeTimer");
+    }
+  },[socket]);
+
+
   return (
     <div style={{ textAlign: "center", margin: "auto" }}>
       {isPolling ? <p className="remaining-time">Remaining Time</p> : ""}
@@ -96,5 +107,6 @@ const Timer = ({ isPolling, coffeeon,socket }) => {
 };
 
 export default Timer;
+
 
 

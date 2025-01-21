@@ -4,9 +4,6 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import queryString from "query-string";
-import Logo from "./Logo";
-import ShareLink from "./invite/ShareLink";
-import LinkIcon from "../assets/Icons/link-icon.png"
 import StoryDescription from "./StoryDescription";
 import "./poker.css";
 import { useHistory } from "react-router";
@@ -19,6 +16,8 @@ import $, { error, event } from 'jquery';
 import Timer from "./Timer";
 import { getSocket } from "./Socket";
 import Result from "./Result";
+import JiraLink from "./JiraLink";
+import Navbar from "./Navbar";
 // import socket from "./Socket";
 
 // const socket = io.connect(location.origin);
@@ -40,7 +39,7 @@ const Poker = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isDescription, setIsDescription] = useState(true);
-  const [resultsDisplayed,setResultsDisplayed] = useState(false);
+  const [resultsDisplayed, setResultsDisplayed] = useState(false);
   const [hand, setHand] = useState([]);
   const [hand2, setHand2] = useState([]);
   const [selected, setSelected] = useState("");
@@ -52,7 +51,7 @@ const Poker = () => {
   const [onBlur, setOnBlur] = useState(true);
   var [noName, setNoName] = useState(false);
   var [flags, noflags] = useState(0);
-  const [isStoryAvailable,setIsStoryAvailable] = useState(false);
+  const [isStoryAvailable, setIsStoryAvailable] = useState(false);
   const [coffeeon, setCoffeeOn] = useState(false);
 
   const [valuelist, setValuelist] = useState([]);
@@ -94,7 +93,7 @@ const Poker = () => {
       });
     }
   }, [socket, location.search]);
- 
+
   //Chat
 
   useEffect(() => {
@@ -289,11 +288,11 @@ const Poker = () => {
     // setResultsDisplayed(false);
   }
 
-  const stopPoll = (event) => {
+  const endPoll = (event) => {
     event.preventDefault();
-    
+
     if (isPolling) {
-      socket.emit("poll","false");
+      socket.emit("poll", "false");
       setIsPolling(false);
       socket.emit("updateWaitingWorth", "?");
     }
@@ -309,11 +308,11 @@ const Poker = () => {
     })
   }, [socket])
 
-  useEffect(()=> {
-    socket.on("isStoryAvailable",(data) => {
+  useEffect(() => {
+    socket.on("isStoryAvailable", (data) => {
       setIsStoryAvailable(data);
     })
-  },[socket])
+  }, [socket])
 
   useEffect(() => {
     socket.on("enable", (data) => {
@@ -324,11 +323,11 @@ const Poker = () => {
     })
   }, [socket])
 
-  useEffect(()=>{
-    socket.on("pollStopped",()=>{
+  useEffect(() => {
+    socket.on("pollStopped", () => {
       setResultsDisplayed(true);
     })
-  },[socket])
+  }, [socket])
 
   const showUsers = () => {
 
@@ -345,7 +344,6 @@ const Poker = () => {
 
   const [linkChange, setLinkChange] = useState('');
   const [showLinks, setShowLinks] = useState(true);
-  const [showJira, setShowJira] = useState(true);
   const [isJira, setIsJira] = useState(true);
 
   const sendJira = (event) => {
@@ -383,34 +381,7 @@ const Poker = () => {
       <div className="unBlurred">
         <Status noName={noName} />
       </div>
-      <header className="NavBar">
-        <nav className="navbar navbar-expand-lg navbar-light">
-          <Logo className="hbLogo" room={room} name={name} />
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav  d-flex Title">
-              <li className="nav-item">
-                <div className="User">
-                  <div className="UserName">
-                    {name}
-                  </div>
-                </div>
-              </li>
-              <li className="nav-item">
-                <ShareLink room={room} cardVal={cardVale} />
-              </li>
-              {/* <li className="nav-item">
-                
-                />
-              </li> */}
-            </ul>
-          </div>
-
-        </nav>
-
-      </header>
+      <Navbar room={room} cardVal={cardVale} name={name}/>
       <div className="m-content">
         <div>
           <UsersInRoom users={users} />
@@ -460,60 +431,21 @@ const Poker = () => {
           <div className="poll-button-container">
             {roomOwner && !resultsDisplayed && (
               <button className="btn pollButtons"
-              onClick={isPolling ? stopPoll : startPoll}
-              disabled={!isStoryAvailable} >
+                onClick={isPolling ? endPoll : startPoll}
+                disabled={!isStoryAvailable} >
                 {isPolling ? "End Poll" : "Start Poll"}
               </button>
             )}
           </div>
-          <Timer isPolling={isPolling} coffeeon={coffeeon} socket={socket}/>
-          <div className="Jira-outer-link">
-            {showLinks ? (
-              <div className="Jira-link">
-                <a
-                  className={`Jira-text ${linkChange ? "active-link" : "disabled-link"}`}
-                  href={linkChange.startsWith("http") ? linkChange : `https://${linkChange}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  tabIndex={linkChange ? 0 : -1}
-                >
-                  Jira Link
-                  <img src={LinkIcon} className={`jira-link-icon ${linkChange ? "active-icon" : "disabled-icon"}`} />
-                </a>
-                {roomOwner && (
-                  <button
-                    aria-label="Jira Link Edit"
-                    className="btn rounded"
-                    onClick={() => setShowLinks(false)}
-                  >
-                    <i className="fa fa-pencil"></i>
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="Jira-link">
-                <input
-                  type="text"
-                  className="Jira-Text"
-                  value={linkChange}
-                  onChange={({ target: { value } }) => setLinkChange(value)}
-                  placeholder="Enter Jira Link"
-                />
-                <button
-                  className="btn Jira-button"
-                  onClick={(event) => {
-                    setShowLinks(true);
-                    sendJira(event);
-                  }}
-                >
-                  Save
-                </button>
-              </div>
-            )}
-          </div>
+          <Timer isPolling={isPolling} coffeeon={coffeeon} socket={socket} />
+          <JiraLink showLinks={showLinks}
+            setShowLinks={setShowLinks}
+            linkChange={linkChange}
+            setLinkChange={setLinkChange}
+            roomOwner={roomOwner} 
+            sendJira={sendJira}/>
 
           <div className="storyDes ">
-
             <StoryDescription socket={socket} setIsDescription={setIsDescription} roomOwner={roomOwner} isPolling={isPolling} startPoll={startPoll} goback={goback} clearJiraLink={clearJiraLink} />
           </div>
 
