@@ -6,6 +6,8 @@ const app = express();
 
 const rooms = new Set();
 var roomUser = [];
+const storyLists = {};
+
 app.use(express.static(path.join(__dirname, '../build')));
 app.use(cors());
 app.get('/*', (req, res) => {
@@ -65,8 +67,14 @@ io.on("connection", function (socket) {
         const { error, user } = addUser({ id: socket.id, name, room, roomOwner, cardVale });
         if (error) return callback(error);
 
+        if(!storyLists[room]) {
+            storyLists[room] = []
+        }
+
         rooms.add(room);
         socket.join(room);
+
+        socket.emit("storyList", storyLists[room]);
 
         io.to(user.room).emit("roomData", {
             room: user.room,
@@ -84,6 +92,31 @@ io.on("connection", function (socket) {
         }
     })
 
+    socket.on("updateStoryList",function(storyList){
+        const user = getUser(socket.id);
+        console.log(storyList,"storylist");
+        if(user) {
+            storyLists[user.room] = storyList;
+            console.log(storyLists[user.room]);
+            console.log(storyLists);
+            io.in(user.room).emit("storyList",storyLists[user.room]);
+        }
+    })
+
+    socket.on("activeStoryIndex",(index)=>{
+        const user = getUser(socket.id);
+        if(user) {
+            io.in(user.room).emit("activeStoryIndex",index);
+        }
+    })
+
+    socket.on("isStoryAvailable",function (data) {
+        const user = getUser(socket.id);
+        if (user) {
+            io.in(user.room).emit("isStoryAvailable", data);
+        }
+    })
+
     socket.on("clearStory", function () {
         const user = getUser(socket.id);
         if (user) {
@@ -98,6 +131,9 @@ io.on("connection", function (socket) {
             io.in(user.room).emit("clearJiraLink");
         }
     })
+
+
+
 
     // Polling
     socket.on("poll", function (data) {
@@ -194,7 +230,7 @@ io.on("connection", function (socket) {
             });
 
             if (UsersInRoom.length === 0) {
-
+                delete storyLists[user.room];
                 rooms.delete(user.room);
             }
         }
