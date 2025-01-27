@@ -189,7 +189,7 @@ const StoryDescription = (props) => {
     return () => {
       socket.off("story");
       socket.off("clearStory");
-      // socket.off("storyList");
+      socket.off("storyList");
       socket.off("activeStoryIndex");
     }
   }, [socket])

@@ -94,11 +94,9 @@ io.on("connection", function (socket) {
 
     socket.on("updateStoryList",function(storyList){
         const user = getUser(socket.id);
-        console.log(storyList,"storylist");
+        
         if(user) {
             storyLists[user.room] = storyList;
-            console.log(storyLists[user.room]);
-            console.log(storyLists);
             io.in(user.room).emit("storyList",storyLists[user.room]);
         }
     })
@@ -241,10 +239,8 @@ io.on("connection", function (socket) {
     //Card
     socket.on("selected", function (data) {
         addWorth(socket.id, data);
-        console.log("the thing is " + data);
         const user = getUser(socket.id);
         roomUser = getUsersInRoom(user.room);
-        console.log(roomUser);
         io.in(user.room).emit("selected", data);
         io.in(user.room).emit("preach", roomUser);
         io.to(user.room).emit("roomData", {
