@@ -45,14 +45,7 @@ const Table = (props) => {
 
   }, [socket]);
   
-  // useEffect(() => {
-  //   const checkVotesComplete = !Object.values(votes).includes("waiting");
-  //   setAllVotesComplete(checkVotesComplete);
-  //   console.log("allvotes", checkVotesComplete);
-  // }, [votes]);
-
   useEffect(() => {
-    // Check if all votes are complete only when all users have voted
     const checkVotesComplete = !Object.values(votes).includes("waiting") && Object.keys(votes).length === props.users.length;
     setAllVotesComplete(checkVotesComplete);
   }, [votes, props.users.length]);

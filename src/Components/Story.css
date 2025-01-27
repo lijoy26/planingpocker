@@ -1,6 +1,6 @@
 .story {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
@@ -32,11 +32,12 @@
 
 .textArea {
   border-color: #ccc;
-  border-radius: 10px;
+  /* border-radius: 10px; */
+  background-color: white;
   padding: 10px;
   width: 500px;
   height: 60px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bolder;
   color: #c10e21;
  
@@ -77,4 +78,108 @@
   color: white;
 }
 
+.bulk-add {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  width: 90%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
+.bulk-textArea {
+  width: 100%;
+  height: 50px;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+/* .textArea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+} */
+
+.addButton {
+  display: inline-block;
+  background-color: #c10e21;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:disabled {
+  /* background-color: #b3d7ff; */
+  color: white;
+  cursor:auto
+}
+
+.addButton:hover:not(:disabled) {
+  background-color: #9D0B1B;
+  color: white;
+}
+
+.story-list {
+  margin: 10px 0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.story-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.story-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.story-item:hover {
+  background-color: #f1f1f1;
+}
+
+.story-item.active {
+  background-color: #fdecea;
+  border-color: #f28b82;
+}
+
+.story-item svg {
+  font-size: 1.4rem;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+.story-item svg:hover {
+  color: #007bff;
+}
